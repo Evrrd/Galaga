@@ -73,7 +73,7 @@ public class Player {
         // StdDraw.setPenColor(StdDraw.RED);
 
     }
-
+    
     public void shooting(double speed) {
         Path cheminT1 = Paths.get("ressources/sprites/shoot.spr");
 
