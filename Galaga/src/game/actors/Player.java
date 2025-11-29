@@ -33,7 +33,7 @@ public class Player {
      * Dessine le joueur, ici c'est un rond rouge
      */
     public void draw() {
-        Path cheminT1 = Paths.get("ressources/sprites/ship.spr");
+        Path cheminT1 = Paths.get("Galaga/ressources/sprites/ship.spr");
         try (BufferedReader reader = Files.newBufferedReader(cheminT1)) {
             String line = null;
             double i = 0.0;
@@ -75,45 +75,8 @@ public class Player {
     }
     
     public void shooting(double speed) {
-        Path cheminT1 = Paths.get("ressources/sprites/shoot.spr");
-
-        double xs = x + 0.048;
-        double ys = y + 0.2;
-        try (BufferedReader reader = Files.newBufferedReader(cheminT1)) {
-            String line = null;
-            double k = 0.0;
-            double j = 0.0;
-            while ((line = reader.readLine()) != null) {
-                for (char c : line.toCharArray()) {
-                    switch (c) {
-                        case 'R':
-                            StdDraw.setPenColor(StdDraw.RED);
-                            break;
-                        case 'B':
-                            StdDraw.setPenColor(StdDraw.BLUE);
-                            break;
-                        case 'G':
-                            StdDraw.setPenColor(StdDraw.GREEN);
-                            break;
-                        case 'Y':
-                            StdDraw.setPenColor(StdDraw.YELLOW);
-                            break;
-                        case 'W':
-                            StdDraw.setPenColor(StdDraw.WHITE);
-                            break;
-                        case 'N':
-                            StdDraw.setPenColor(StdDraw.BLACK);
-                            break;
-                    }
-                    StdDraw.filledSquare(xs + k, ys - j, 0.006);
-                    k += 0.006;
-                }
-                k = 0.0;
-                j += 0.006;
-            }
-        } catch (IOException ieo) {
-            System.out.println(ieo);
-        }
+        Shoot sa = new Shoot(x, y, 0.006);
+        sa.draw();
 
     }
 
