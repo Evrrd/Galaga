@@ -15,6 +15,7 @@ public class Player {
     private double x; // postion du joueur sur l'axe des abscisses
     private double y; // position du joueur sur l'axe des ordonnées
     private double length; // largeur du joueur
+    private static double percent = 0.005;
 
     /**
      * Créé un joueur.
@@ -33,6 +34,7 @@ public class Player {
      * Dessine le joueur, ici c'est un rond rouge
      */
     public void draw() {
+
         Path cheminT1 = Paths.get("Galaga/ressources/sprites/ship.spr");
         try (BufferedReader reader = Files.newBufferedReader(cheminT1)) {
             String line = null;
@@ -60,11 +62,11 @@ public class Player {
                             StdDraw.setPenColor(StdDraw.BLACK);
                             break;
                     }
-                    StdDraw.filledSquare(x + i, y - j, 0.006);
-                    i += 0.006;
+                    StdDraw.filledSquare(x + i, y - j, percent);
+                    i += percent;
                 }
                 i = 0.0;
-                j += 0.006;
+                j += percent;
             }
         } catch (IOException ieo) {
             System.out.println(ieo);
@@ -75,9 +77,9 @@ public class Player {
     }
     
     public void shooting(double speed) {
-        Shoot sa = new Shoot(x, y, 0.006);
+        Shoot sa = new Shoot(x + 0.0235, y + 0.05, 0.006);
         sa.draw();
-
+        
     }
 
     /**

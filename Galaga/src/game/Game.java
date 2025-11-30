@@ -22,7 +22,7 @@ public class Game {
      * Initialise l'espace de jeu
      */
     private void init() {
-        StdDraw.setCanvasSize(1000, 750);
+        StdDraw.setCanvasSize(600, 700);
         StdDraw.enableDoubleBuffering();
     }
 
