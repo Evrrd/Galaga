@@ -1,10 +1,12 @@
 package game.actors;
 
 import engine.StdDraw;
+import game.Parameter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Classe représentant le jouuer.
@@ -15,7 +17,10 @@ public class Player {
     private double x; // postion du joueur sur l'axe des abscisses
     private double y; // position du joueur sur l'axe des ordonnées
     private double length; // largeur du joueur
-    private static double percent = 0.005;
+    //private static Parameter param = new Parameter();  
+    public Shoot sa;
+    public Shoot sb;
+    public Shoot sc;
 
     /**
      * Créé un joueur.
@@ -28,6 +33,10 @@ public class Player {
         this.x = x;
         this.y = y;
         this.length = length;
+        Parameter.shoot_one_go = false;
+        Parameter.shoot_two_go = false;
+        Parameter.shoot_three_go = false;
+
     }
 
     /**
@@ -62,11 +71,11 @@ public class Player {
                             StdDraw.setPenColor(StdDraw.BLACK);
                             break;
                     }
-                    StdDraw.filledSquare(x + i, y - j, percent);
-                    i += percent;
+                    StdDraw.filledSquare(x + i, y - j, Parameter.proportion_player);
+                    i += Parameter.proportion_player;
                 }
                 i = 0.0;
-                j += percent;
+                j += Parameter.proportion_player; 
             }
         } catch (IOException ieo) {
             System.out.println(ieo);
@@ -74,12 +83,6 @@ public class Player {
 
         // StdDraw.setPenColor(StdDraw.RED);
 
-    }
-    
-    public void shooting(double speed) {
-        Shoot sa = new Shoot(x + 0.0235, y + 0.05, 0.006);
-        sa.draw();
-        
     }
 
     /**
@@ -99,8 +102,67 @@ public class Player {
                 x += speed;
             }
         }
+
         if (StdDraw.isKeyPressed(32)) {
-            shooting(speed);
+            if (Parameter.shoot_one_go == false){
+                sa = new Shoot(x + (Parameter.player_square_len / 2) * Parameter.proportion_player - (Parameter.shoot_width / 2) * Parameter.proportion_player, y + (Parameter.player_square_len / 2) * Parameter.proportion_player, Parameter.proportion_player);
+                Parameter.shoot_one_go = true;
+            }
+            else if (Parameter.shoot_two_go == false){
+                sb = new Shoot(x + (Parameter.player_square_len / 2) * Parameter.proportion_player - (Parameter.shoot_width / 2) * Parameter.proportion_player, y + (Parameter.player_square_len / 2) * Parameter.proportion_player, Parameter.proportion_player);
+                Parameter.shoot_two_go = true;
+            }
+            else if (Parameter.shoot_three_go == false){
+                sc = new Shoot(x + (Parameter.player_square_len / 2) * Parameter.proportion_player - (Parameter.shoot_width / 2) * Parameter.proportion_player, y + (Parameter.player_square_len / 2) * Parameter.proportion_player, Parameter.proportion_player);
+                Parameter.shoot_three_go = true;
+            }
+            
         }
+        if (sa != null){
+            if (sa.getY() > 0.9){
+                Parameter.shoot_one_go = false;
+                sa = null;
+            }
+        }
+        if (sb != null){
+            if (sb.getY() > 0.9){
+                Parameter.shoot_two_go = false;
+                sb = null;
+            }
+        }
+        if (sc != null){
+            if (sc.getY() > 0.9){
+                Parameter.shoot_three_go = false;
+                sc = null;
+            }
+        }
+
+        if (Parameter.shoot_one_go == true){
+            if (sa.drew == true){
+                sa.undraw();
+                sa.moving(speed);
+            }
+            else {
+                sa.draw();
+            }
+        }
+
+        if (Parameter.shoot_two_go == true){
+            if (sb.drew == true){
+                sb.undraw();
+                sb.moving(speed);
+            }
+            else { sb.draw();}
+        }
+
+        if (Parameter.shoot_three_go == true){
+            if (sc.drew == true){
+                sc.undraw();
+                sc.moving(speed);
+            }
+            else {sc.draw();}
+        }
+        
+        
     }
 }

@@ -14,5 +14,7 @@ public final class Parameter {
     public static final int shoot_width = 3;
     public static int shoot_number;
     public static boolean shoot_one_go;
+    public static boolean shoot_two_go;
+    public static boolean shoot_three_go;
     
 }

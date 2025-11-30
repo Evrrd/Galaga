@@ -22,7 +22,7 @@ public class Game {
      * Initialise l'espace de jeu
      */
     private void init() {
-        StdDraw.setCanvasSize(600, 700);
+        StdDraw.setCanvasSize(Parameter.canvasWidth, Parameter.canvasHeigth);
         StdDraw.enableDoubleBuffering();
     }
 
@@ -39,7 +39,7 @@ public class Game {
             draw(); // on dessine chaques éléments
 
             StdDraw.show(); // on montre l'interface
-            StdDraw.pause(30); // on attend 30 milisecondes avant de recommencer
+            StdDraw.pause(50); // on attend 30 milisecondes avant de recommencer
         }
     }
 
@@ -57,13 +57,20 @@ public class Game {
      */
     public void draw() {
         drawZoneScore();
+        drawZoneLifeLevel();
         player.draw();
+        
 
     }
 
     public void drawZoneScore() {
-        StdDraw.setPenColor(StdDraw.WHITE);
-        StdDraw.line(0, 0.9, 1, 0.9);
+        StdDraw.setPenColor(StdDraw.PINK);
+        StdDraw.line(0, Parameter.line_top_zone, 1, Parameter.line_top_zone);
+    }
+
+    public void drawZoneLifeLevel(){
+        StdDraw.setPenColor(StdDraw.CYAN);
+        StdDraw.line(0, Parameter.line_bottom_zone, 1, Parameter.line_bottom_zone);
     }
 
     /**
