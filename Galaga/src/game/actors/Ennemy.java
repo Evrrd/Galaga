@@ -97,6 +97,7 @@ public class Ennemy {
     public double getLength() { return length; }
 }
 
+/*
 class Bee extends Ennemy{
     public Bee(double x, double y, double length, double speedX, double speedY, String spriteFile) {
         super(x, y, 0.006, 0.004, 0.003, "bee.spr");
@@ -117,3 +118,4 @@ class Bee extends Ennemy{
     }
 
 }
+*/

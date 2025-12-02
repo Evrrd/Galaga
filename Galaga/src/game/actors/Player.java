@@ -67,11 +67,13 @@ public class Player {
                         case 'N':
                             StdDraw.setPenColor(StdDraw.BLACK);
                             break;
+                        default :
+                            StdDraw.setPenColor(StdDraw.BLACK);
                     }
-                    if (c != '\n'){
-                        StdDraw.filledSquare(x + i, y - j, Parameter.proportion_player);
-                        i += Parameter.proportion_player;
-                    }
+                
+                    StdDraw.filledSquare(x + i, y - j, Parameter.proportion_player);
+                    i += Parameter.proportion_player;
+                
                     
                 }
                 i = 0.0;
