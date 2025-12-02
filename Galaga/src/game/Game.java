@@ -1,5 +1,4 @@
 package game;
-// e
 
 import engine.StdDraw;
 import game.actors.Player;

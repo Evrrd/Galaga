@@ -25,6 +25,7 @@ public class Shoot {
     public Shoot(double xx, double yy){
         x = xx;
         y = yy;
+        drew = false;
     }
     public double getY() {
         return y;

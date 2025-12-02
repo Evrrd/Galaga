@@ -17,7 +17,7 @@ public class Ennemy {
     private String spriteFile; // chemin du fichier sprite
 
     
-    public Enemy(double x, double y, double length, double speedX, double speedY, String spriteFile) {
+    public Ennemy(double x, double y, double length, double speedX, double speedY, String spriteFile) {
         this.x = x;
         this.y = y;
         this.length = length;
@@ -30,7 +30,7 @@ public class Ennemy {
      * Dessine les ennemis selon leur sprite
      */
     public void draw() {
-        if (!aLive) {
+        if (!alive) {
             return;
         }
 
@@ -73,22 +73,22 @@ public class Ennemy {
     }
     
     public void shooting(double speed) {
-        Shoot s = new Shoot(x, y, 0.006);
+        Shoot s = new Shoot(x, y);
         s.draw();
     }
 
-    private abstract void move();
+    //private abstract void move();
 
     public void destroy() {
         alive = false;
     }
 
     public void update() {
-        if (!alive) return
-        move();
+        if (!alive) return ;
+        //move();
     }
 
-    public void isAlive() { return alive; }
+    public boolean isAlive() { return alive; }
 
     public double getX() { return x; }
 
@@ -97,7 +97,7 @@ public class Ennemy {
     public double getLength() { return length; }
 }
 
-public class Bee extends Ennemy{
+class Bee extends Ennemy{
     public Bee(double x, double y, double length, double speedX, double speedY, String spriteFile) {
         super(x, y, 0.006, 0.004, 0.003, "bee.spr");
     }
