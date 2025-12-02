@@ -6,7 +6,6 @@ import game.Parameter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Classe représentant le jouuer.
@@ -16,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 public class Player {
     private double x; // postion du joueur sur l'axe des abscisses
     private double y; // position du joueur sur l'axe des ordonnées
-    private double length; // largeur du joueur
     //private static Parameter param = new Parameter();  
     public Shoot sa;
     public Shoot sb;
@@ -29,10 +27,9 @@ public class Player {
      * @param y      position du joueur sur l'axe des ordonnées
      * @param length largeur du joueur
      */
-    public Player(double x, double y, double length) {
+    public Player(double x, double y) {
         this.x = x;
         this.y = y;
-        this.length = length;
         Parameter.shoot_one_go = false;
         Parameter.shoot_two_go = false;
         Parameter.shoot_three_go = false;
@@ -71,8 +68,11 @@ public class Player {
                             StdDraw.setPenColor(StdDraw.BLACK);
                             break;
                     }
-                    StdDraw.filledSquare(x + i, y - j, Parameter.proportion_player);
-                    i += Parameter.proportion_player;
+                    if (c != '\n'){
+                        StdDraw.filledSquare(x + i, y - j, Parameter.proportion_player);
+                        i += Parameter.proportion_player;
+                    }
+                    
                 }
                 i = 0.0;
                 j += Parameter.proportion_player; 
@@ -92,28 +92,28 @@ public class Player {
         double speed = 0.01; // vitesse de déplacement du joueur
         // Si la flèche gauche est préssé
         if (StdDraw.isKeyPressed(37)) {
-            if (x - speed > 0.008) {
+            if (x - speed > Parameter.proportion_player) {
                 x -= speed;
             }
         }
         // Si la flèche droite est préssé
         if (StdDraw.isKeyPressed(39)) {
-            if (x + speed < 0.920) {
+            if (x + speed < 1 - Parameter.proportion_player * Parameter.player_square_len) {
                 x += speed;
             }
         }
 
         if (StdDraw.isKeyPressed(32)) {
             if (Parameter.shoot_one_go == false){
-                sa = new Shoot(x + (Parameter.player_square_len / 2) * Parameter.proportion_player - (Parameter.shoot_width / 2) * Parameter.proportion_player, y + (Parameter.player_square_len / 2) * Parameter.proportion_player, Parameter.proportion_player);
+                sa = new Shoot(x + (Parameter.player_square_len / 2) * Parameter.proportion_player - (Parameter.shoot_width / 2) * Parameter.proportion_player, y + (Parameter.player_square_len / 2) * Parameter.proportion_player);
                 Parameter.shoot_one_go = true;
             }
             else if (Parameter.shoot_two_go == false){
-                sb = new Shoot(x + (Parameter.player_square_len / 2) * Parameter.proportion_player - (Parameter.shoot_width / 2) * Parameter.proportion_player, y + (Parameter.player_square_len / 2) * Parameter.proportion_player, Parameter.proportion_player);
+                sb = new Shoot(x + (Parameter.player_square_len / 2) * Parameter.proportion_player - (Parameter.shoot_width / 2) * Parameter.proportion_player, y + (Parameter.player_square_len / 2) * Parameter.proportion_player);
                 Parameter.shoot_two_go = true;
             }
             else if (Parameter.shoot_three_go == false){
-                sc = new Shoot(x + (Parameter.player_square_len / 2) * Parameter.proportion_player - (Parameter.shoot_width / 2) * Parameter.proportion_player, y + (Parameter.player_square_len / 2) * Parameter.proportion_player, Parameter.proportion_player);
+                sc = new Shoot(x + (Parameter.player_square_len / 2) * Parameter.proportion_player - (Parameter.shoot_width / 2) * Parameter.proportion_player, y + (Parameter.player_square_len / 2) * Parameter.proportion_player);
                 Parameter.shoot_three_go = true;
             }
             

@@ -19,14 +19,12 @@ public class Shoot {
     
 
     private double y;
-    private double length;
     public boolean drew;
 
 
-    public Shoot(double xx, double yy, double len){
+    public Shoot(double xx, double yy){
         x = xx;
         y = yy;
-        length = len; // ?
     }
     public double getY() {
         return y;
