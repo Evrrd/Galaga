@@ -15,7 +15,7 @@ import java.nio.file.*;
 public class Player {
     private double x; // postion du joueur sur l'axe des abscisses
     private double y; // position du joueur sur l'axe des ordonnées
-    //private static Parameter param = new Parameter();  
+    // private static Parameter param = new Parameter();
     public Shoot sa;
     public Shoot sb;
     public Shoot sc;
@@ -41,7 +41,7 @@ public class Player {
      */
     public void draw() {
 
-        Path cheminT1 = Paths.get("Galaga/ressources/sprites/ship.spr");
+        Path cheminT1 = Paths.get("ressources/sprites/ship.spr");
         try (BufferedReader reader = Files.newBufferedReader(cheminT1)) {
             String line = null;
             double i = 0.0;
@@ -68,15 +68,25 @@ public class Player {
                             StdDraw.setPenColor(StdDraw.BLACK);
                             break;
                     }
-                
+
                     StdDraw.filledSquare(x + i, y - j, Parameter.proportion_player);
                     i += Parameter.proportion_player;
                 }
                 i = 0.0;
-                j += Parameter.proportion_player; 
+                j += Parameter.proportion_player;
             }
         } catch (IOException ieo) {
             System.out.println(ieo);
+        }
+
+        if (sa != null) {
+            sa.draw();
+        }
+        if (sb != null) {
+            sb.draw();
+        }
+        if (sc != null) {
+            sc.draw();
         }
 
         // StdDraw.setPenColor(StdDraw.RED);
@@ -102,65 +112,51 @@ public class Player {
         }
 
         if (StdDraw.isKeyPressed(32)) {
-            if (Parameter.shoot_one_go == false){
-                sa = new Shoot(x + (Parameter.player_square_len / 2) * Parameter.proportion_player - (Parameter.shoot_width / 2) * Parameter.proportion_player, y + (Parameter.player_square_len / 2) * Parameter.proportion_player);
+            if (Parameter.shoot_one_go == false) {
+                sa = new Shoot(
+                        x + (Parameter.player_square_len / 2) * Parameter.proportion_player
+                                - (Parameter.shoot_width / 2) * Parameter.proportion_player,
+                        y + (Parameter.player_square_len / 2) * Parameter.proportion_player, 1);
                 Parameter.shoot_one_go = true;
-            }
-            else if (Parameter.shoot_two_go == false){
-                sb = new Shoot(x + (Parameter.player_square_len / 2) * Parameter.proportion_player - (Parameter.shoot_width / 2) * Parameter.proportion_player, y + (Parameter.player_square_len / 2) * Parameter.proportion_player);
+
+            } else if (Parameter.shoot_two_go == false) {
+                sb = new Shoot(
+                        x + (Parameter.player_square_len / 2) * Parameter.proportion_player
+                                - (Parameter.shoot_width / 2) * Parameter.proportion_player,
+                        y + (Parameter.player_square_len / 2) * Parameter.proportion_player, 1);
                 Parameter.shoot_two_go = true;
-            }
-            else if (Parameter.shoot_three_go == false){
-                sc = new Shoot(x + (Parameter.player_square_len / 2) * Parameter.proportion_player - (Parameter.shoot_width / 2) * Parameter.proportion_player, y + (Parameter.player_square_len / 2) * Parameter.proportion_player);
+
+            } else if (Parameter.shoot_three_go == false) {
+                sc = new Shoot(
+                        x + (Parameter.player_square_len / 2) * Parameter.proportion_player
+                                - (Parameter.shoot_width / 2) * Parameter.proportion_player,
+                        y + (Parameter.player_square_len / 2) * Parameter.proportion_player, 1);
                 Parameter.shoot_three_go = true;
             }
-            
+
         }
-        if (sa != null){
-            if (sa.getY() > 0.9){
-                Parameter.shoot_one_go = false;
+        if (sa != null) {
+            sa.update();
+            if (sa.getY() + 0.002 > 0.9) {
                 sa = null;
+                Parameter.shoot_one_go = false;
             }
         }
-        if (sb != null){
-            if (sb.getY() > 0.9){
-                Parameter.shoot_two_go = false;
+        if (sb != null) {
+            sb.update();
+            if (sb.getY() + 0.002 > 0.9) {
                 sb = null;
+                Parameter.shoot_two_go = false;
+
             }
         }
-        if (sc != null){
-            if (sc.getY() > 0.9){
-                Parameter.shoot_three_go = false;
+        if (sc != null) {
+            sc.update();
+            if (sc.getY() + 0.002 > 0.9) {
                 sc = null;
+                Parameter.shoot_three_go = false;
             }
         }
 
-        if (Parameter.shoot_one_go == true){
-            if (sa.drew == true){
-                sa.undraw();
-                sa.moving(speed);
-            }
-            else {
-                sa.draw();
-            }
-        }
-
-        if (Parameter.shoot_two_go == true){
-            if (sb.drew == true){
-                sb.undraw();
-                sb.moving(speed);
-            }
-            else { sb.draw();}
-        }
-
-        if (Parameter.shoot_three_go == true){
-            if (sc.drew == true){
-                sc.undraw();
-                sc.moving(speed);
-            }
-            else {sc.draw();}
-        }
-        
-        
     }
 }

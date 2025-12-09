@@ -1,6 +1,12 @@
 package game;
 
+import java.io.BufferedReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import engine.StdDraw;
+import game.actors.Ennemy;
 import game.actors.Player;
 
 /**
@@ -10,13 +16,29 @@ import game.actors.Player;
 public class Game {
     public Player player; // Jouer, seul éléments actuellement dans notre jeu
 
+    public Ennemy[] tabEnnemy;
+
     /**
      * Créé un jeu avec tous les éléments qui le composent
      */
     public Game() {
         player = new Player(0.452, 0.2);
+        // Level(a);
 
     }
+
+    /*
+     * public void Level(int a) {
+     * String s = "level" + a + ".spr";
+     * Path cheminT1 = Paths.get("ressources/sprites/" + s);
+     * try (BufferedReader reader = Files.newBufferedReader(cheminT1)) {
+     * String line = null;
+     * while ((line = reader.readLine()) != null) {
+     * 
+     * }
+     * }
+     * }
+     */
 
     /**
      * Initialise l'espace de jeu
@@ -59,16 +81,16 @@ public class Game {
         drawZoneScore();
         drawZoneLifeLevel();
         player.draw();
-        
 
     }
 
     public void drawZoneScore() {
         StdDraw.setPenColor(StdDraw.PINK);
         StdDraw.line(0, Parameter.line_top_zone, 1, Parameter.line_top_zone);
+
     }
 
-    public void drawZoneLifeLevel(){
+    public void drawZoneLifeLevel() {
         StdDraw.setPenColor(StdDraw.CYAN);
         StdDraw.line(0, Parameter.line_bottom_zone, 1, Parameter.line_bottom_zone);
     }
