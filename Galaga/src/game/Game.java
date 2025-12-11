@@ -1,6 +1,7 @@
 package game;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,22 +24,23 @@ public class Game {
      */
     public Game() {
         player = new Player(0.452, 0.2);
-        // Level(a);
+        Level(1);
 
     }
 
-    /*
-     * public void Level(int a) {
-     * String s = "level" + a + ".spr";
-     * Path cheminT1 = Paths.get("ressources/sprites/" + s);
-     * try (BufferedReader reader = Files.newBufferedReader(cheminT1)) {
-     * String line = null;
-     * while ((line = reader.readLine()) != null) {
-     * 
-     * }
-     * }
-     * }
-     */
+    public void Level(int a) {
+        String s = "level" + a + ".spr";
+        Path cheminT1 = Paths.get("ressources/sprites/" + s);
+        try (BufferedReader reader = Files.newBufferedReader(cheminT1)) {
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Initialise l'espace de jeu

@@ -10,24 +10,23 @@ import java.nio.file.*;
 public class Ennemy {
     private double x; // postion du joueur sur l'axe des abscisses
     private double y; // position du joueur sur l'axe des ordonnées
-    private double length; // largeur du joueur
-    private double speedX; // vitesse horizontale
-    private double speedY; // vitesse verticale
+    private double proportion;
+    private double speed;
+    private int valeurScore;
     private boolean alive = true; // état de vie de l'ennemi
     private String spriteFile; // chemin du fichier sprite
-
-    public Ennemy(double x, double y, double length, double speedX, double speedY, String spriteFile) {
-        this.x = x;
-        this.y = y;
-        this.length = length;
-        this.speedX = speedX;
-        this.speedY = speedY;
-        this.spriteFile = spriteFile;
-    }
 
     public Ennemy(double xx, double yy) {
         x = xx;
         y = yy;
+    }
+
+    public Ennemy(double xx, double yy, double proportioEnn, int valSc, double speedEnn) {
+        x = xx;
+        y = yy;
+        proportion = proportioEnn;
+        valeurScore = valSc;
+        speed = speedEnn;
     }
 
     /**
@@ -65,11 +64,11 @@ public class Ennemy {
                             StdDraw.setPenColor(StdDraw.BLACK);
                             break;
                     }
-                    StdDraw.filledSquare(x + i, y - j, Parameter.proportion_player);
-                    i += Parameter.proportion_player;
+                    StdDraw.filledSquare(x + i, y - j, proportion); // change prop
+                    i += proportion; // here 2
                 }
                 i = 0.0;
-                j += Parameter.proportion_player;
+                j += proportion; // here
             }
         } catch (IOException ieo) {
             System.out.println(ieo);
@@ -100,9 +99,6 @@ public class Ennemy {
         return y;
     }
 
-    public double getLength() {
-        return length;
-    }
 }
 
 /*

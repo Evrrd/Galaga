@@ -16,9 +16,11 @@ public class Player {
     private double x; // postion du joueur sur l'axe des abscisses
     private double y; // position du joueur sur l'axe des ordonnées
     // private static Parameter param = new Parameter();
-    public Shoot sa;
-    public Shoot sb;
-    public Shoot sc;
+
+    private double proportionPlayer = 0.004;
+    private int lengthPlayer = 15;
+
+    private Shoot[] listShootPlayer;
 
     /**
      * Créé un joueur.
@@ -30,9 +32,7 @@ public class Player {
     public Player(double x, double y) {
         this.x = x;
         this.y = y;
-        Parameter.shoot_one_go = false;
-        Parameter.shoot_two_go = false;
-        Parameter.shoot_three_go = false;
+        listShootPlayer = new Shoot[3];
 
     }
 
@@ -69,24 +69,24 @@ public class Player {
                             break;
                     }
 
-                    StdDraw.filledSquare(x + i, y - j, Parameter.proportion_player);
-                    i += Parameter.proportion_player;
+                    StdDraw.filledSquare(x + i, y - j, proportionPlayer);
+                    i += proportionPlayer;
                 }
                 i = 0.0;
-                j += Parameter.proportion_player;
+                j += proportionPlayer;
             }
         } catch (IOException ieo) {
             System.out.println(ieo);
         }
 
-        if (sa != null) {
-            sa.draw();
+        if (listShootPlayer[0] != null) {
+            listShootPlayer[0].draw();
         }
-        if (sb != null) {
-            sb.draw();
+        if (listShootPlayer[1] != null) {
+            listShootPlayer[1].draw();
         }
-        if (sc != null) {
-            sc.draw();
+        if (listShootPlayer[2] != null) {
+            listShootPlayer[2].draw();
         }
 
         // StdDraw.setPenColor(StdDraw.RED);
@@ -100,61 +100,57 @@ public class Player {
         double speed = 0.01; // vitesse de déplacement du joueur
         // Si la flèche gauche est préssé
         if (StdDraw.isKeyPressed(37)) {
-            if (x - speed > Parameter.proportion_player) {
+            if (x - speed > proportionPlayer) {
                 x -= speed;
             }
         }
         // Si la flèche droite est préssé
         if (StdDraw.isKeyPressed(39)) {
-            if (x + speed < 1 - Parameter.proportion_player * Parameter.player_square_len) {
+            if (x + speed < 1 - proportionPlayer * lengthPlayer) {
                 x += speed;
             }
         }
 
         if (StdDraw.isKeyPressed(32)) {
-            if (Parameter.shoot_one_go == false) {
-                sa = new Shoot(
-                        x + (Parameter.player_square_len / 2) * Parameter.proportion_player
-                                - (Parameter.shoot_width / 2) * Parameter.proportion_player,
-                        y + (Parameter.player_square_len / 2) * Parameter.proportion_player, 1);
-                Parameter.shoot_one_go = true;
 
-            } else if (Parameter.shoot_two_go == false) {
-                sb = new Shoot(
-                        x + (Parameter.player_square_len / 2) * Parameter.proportion_player
-                                - (Parameter.shoot_width / 2) * Parameter.proportion_player,
-                        y + (Parameter.player_square_len / 2) * Parameter.proportion_player, 1);
-                Parameter.shoot_two_go = true;
+            if (listShootPlayer[0] == null) {
+                listShootPlayer[0] = new Shoot(
+                        x + (lengthPlayer / 2) * proportionPlayer
+                                - (1 / 2) * proportionPlayer,
+                        y + (lengthPlayer / 2) * proportionPlayer, 1);
 
-            } else if (Parameter.shoot_three_go == false) {
-                sc = new Shoot(
-                        x + (Parameter.player_square_len / 2) * Parameter.proportion_player
-                                - (Parameter.shoot_width / 2) * Parameter.proportion_player,
-                        y + (Parameter.player_square_len / 2) * Parameter.proportion_player, 1);
-                Parameter.shoot_three_go = true;
+            } else if (listShootPlayer[1] == null) {
+                listShootPlayer[1] = new Shoot(
+                        x + (lengthPlayer / 2) * proportionPlayer
+                                - (1 / 2) * proportionPlayer,
+                        y + (lengthPlayer / 2) * proportionPlayer, 1);
+
+            } else if (listShootPlayer[2] == null) {
+                listShootPlayer[2] = new Shoot(
+                        x + (lengthPlayer / 2) * proportionPlayer
+                                - (1 / 2) * proportionPlayer,
+                        y + (lengthPlayer / 2) * proportionPlayer, 1);
             }
 
         }
-        if (sa != null) {
-            sa.update();
-            if (sa.getY() + 0.002 > 0.9) {
-                sa = null;
-                Parameter.shoot_one_go = false;
+
+        if (listShootPlayer[0] != null) {
+            listShootPlayer[0].update();
+            if (listShootPlayer[0].getY() + 0.002 > 0.9) {
+                listShootPlayer[0] = null;
             }
         }
-        if (sb != null) {
-            sb.update();
-            if (sb.getY() + 0.002 > 0.9) {
-                sb = null;
-                Parameter.shoot_two_go = false;
+        if (listShootPlayer[1] != null) {
+            listShootPlayer[1].update();
+            if (listShootPlayer[1].getY() + 0.002 > 0.9) {
+                listShootPlayer[1] = null;
 
             }
         }
-        if (sc != null) {
-            sc.update();
-            if (sc.getY() + 0.002 > 0.9) {
-                sc = null;
-                Parameter.shoot_three_go = false;
+        if (listShootPlayer[2] != null) {
+            listShootPlayer[2].update();
+            if (listShootPlayer[2].getY() + 0.002 > 0.9) {
+                listShootPlayer[2] = null;
             }
         }
 

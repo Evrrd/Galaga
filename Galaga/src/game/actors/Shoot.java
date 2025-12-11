@@ -14,6 +14,7 @@ public class Shoot {
     private double x;
 
     private double y;
+    private double proportion = 0.004;
 
     private int direction;
 
@@ -55,11 +56,11 @@ public class Shoot {
                             StdDraw.setPenColor(StdDraw.BLACK);
                             break;
                     }
-                    StdDraw.filledSquare(x + i, y - j, Parameter.proportion_player);
-                    i += Parameter.proportion_player;
+                    StdDraw.filledSquare(x + i, y - j, proportion); // change prop
+                    i += proportion; // change propor
                 }
                 i = 0.0;
-                j += Parameter.proportion_player;
+                j += proportion; // change propor
             }
         } catch (IOException ieo) {
             System.out.println(ieo);
