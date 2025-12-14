@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.*;
 
 public class Ennemy {
+    private String name;
     private double x; // postion du joueur sur l'axe des abscisses
     private double y; // position du joueur sur l'axe des ordonnées
     private double proportion;
@@ -21,12 +22,33 @@ public class Ennemy {
         y = yy;
     }
 
-    public Ennemy(double xx, double yy, double proportioEnn, int valSc, double speedEnn) {
+    public Ennemy(String n, double xx, double yy, double proportioEnn, int valSc, double speedEnn) {
+        name = n;
         x = xx;
         y = yy;
-        proportion = proportioEnn;
+        proportion = proportioEnn / 10 - 0.002;
         valeurScore = valSc;
         speed = speedEnn;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setAlive(boolean b) {
+        alive = b;
+    }
+
+    public double getProportion() {
+        return proportion;
     }
 
     /**
@@ -36,8 +58,25 @@ public class Ennemy {
         if (!alive) {
             return;
         }
+        Path cheminT1;
 
-        Path cheminT1 = Paths.get("ressources/sprites/bee.spr");
+        switch (name) {
+            case "Bee":
+                cheminT1 = Paths.get("ressources/sprites/bee.spr");
+                break;
+
+            case "Moth":
+                cheminT1 = Paths.get("ressources/sprites/catcher.spr");
+                break;
+
+            case "Butterfly":
+                cheminT1 = Paths.get("ressources/sprites/butterfly.spr");
+                break;
+            default:
+                cheminT1 = Paths.get("ressources/sprites/ship.spr");
+                break;
+        }
+
         try (BufferedReader reader = Files.newBufferedReader(cheminT1)) {
             String line = null;
             double i = 0.0;
@@ -85,18 +124,6 @@ public class Ennemy {
         if (!alive)
             return;
         // move();
-    }
-
-    public boolean isAlive() {
-        return alive;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
     }
 
 }

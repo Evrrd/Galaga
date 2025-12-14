@@ -17,25 +17,38 @@ import game.actors.Player;
 public class Game {
     public Player player; // Jouer, seul éléments actuellement dans notre jeu
 
-    public Ennemy[] tabEnnemy;
+    public Level levelInst;
 
     /**
      * Créé un jeu avec tous les éléments qui le composent
      */
     public Game() {
-        player = new Player(0.452, 0.2);
+        player = new Player(0.472, 0.2);
         Level(1);
 
     }
 
+    public String[] parseStrings(String s) {
+        if (s == null) {
+            return null;
+        }
+        return s.split(" ");
+    }
+
     public void Level(int a) {
-        String s = "level" + a + ".spr";
-        Path cheminT1 = Paths.get("ressources/sprites/" + s);
+        String s = "level" + a + ".lvl";
+        Path cheminT1 = Paths.get("ressources/levels/" + s);
         try (BufferedReader reader = Files.newBufferedReader(cheminT1)) {
             String line = null;
-            while ((line = reader.readLine()) != null) {
 
+            String[] lineArray = parseStrings(reader.readLine()); // first line
+            levelInst = new Level(lineArray[0], lineArray[1], lineArray[2], lineArray[3]);
+
+            while ((line = reader.readLine()) != null) {
+                lineArray = parseStrings(line);
+                levelInst.makeAddEnnemy(lineArray);
             }
+
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -48,6 +61,7 @@ public class Game {
     private void init() {
         StdDraw.setCanvasSize(Parameter.canvasWidth, Parameter.canvasHeigth);
         StdDraw.enableDoubleBuffering();
+        Level(1);
     }
 
     /**
@@ -83,6 +97,7 @@ public class Game {
         drawZoneScore();
         drawZoneLifeLevel();
         player.draw();
+        drawEnnemy();
 
     }
 
@@ -97,10 +112,17 @@ public class Game {
         StdDraw.line(0, Parameter.line_bottom_zone, 1, Parameter.line_bottom_zone);
     }
 
+    public void drawEnnemy() {
+        for (Ennemy e : levelInst.getFormation()) {
+            e.draw();
+        }
+    }
+
     /**
      * Met a jour les attributs de tous les éléments du jeu
      */
     private void update() {
         player.update();
+        levelInst.update(player.getListShootPlayer());
     }
 }

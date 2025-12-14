@@ -1,6 +1,7 @@
 package game.actors;
 
 import engine.StdDraw;
+import game.Level;
 import game.Parameter;
 
 import java.io.BufferedReader;
@@ -34,6 +35,10 @@ public class Player {
         this.y = y;
         listShootPlayer = new Shoot[3];
 
+    }
+
+    public Shoot[] getListShootPlayer() {
+        return listShootPlayer;
     }
 
     /**
@@ -136,23 +141,25 @@ public class Player {
 
         if (listShootPlayer[0] != null) {
             listShootPlayer[0].update();
-            if (listShootPlayer[0].getY() + 0.002 > 0.9) {
+            if ((listShootPlayer[0].getY() + 0.002 > 0.9) || (listShootPlayer[0].getAlive() == false)) {
                 listShootPlayer[0] = null;
             }
         }
+
         if (listShootPlayer[1] != null) {
             listShootPlayer[1].update();
-            if (listShootPlayer[1].getY() + 0.002 > 0.9) {
+            if ((listShootPlayer[1].getY() + 0.002 > 0.9) || (listShootPlayer[1].getAlive() == false)) {
                 listShootPlayer[1] = null;
-
             }
         }
+
         if (listShootPlayer[2] != null) {
             listShootPlayer[2].update();
-            if (listShootPlayer[2].getY() + 0.002 > 0.9) {
+            if ((listShootPlayer[2].getY() + 0.002 > 0.9) || (listShootPlayer[2].getAlive() == false)) {
                 listShootPlayer[2] = null;
             }
         }
 
     }
+
 }
