@@ -1,6 +1,6 @@
 package game;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
 
 import game.actors.Bee;
 import game.actors.Butterfly;
@@ -15,14 +15,14 @@ public class Level {
     private int cooldownShoot;
     private int cooldownMissile;
 
-    private LinkedHashSet<Ennemy> formation;
+    private ArrayList<Ennemy> formation;
 
     public Level(String n, String sF, String cS, String cM) {
         name = n;
         speedFormation = Double.valueOf(sF);
         cooldownShoot = Integer.valueOf(cS);
         cooldownMissile = Integer.valueOf(cM);
-        formation = new LinkedHashSet<Ennemy>();
+        formation = new ArrayList<Ennemy>();
     }
 
     public String getName() {
@@ -61,7 +61,7 @@ public class Level {
         }
     }
 
-    public LinkedHashSet<Ennemy> getFormation() {
+    public ArrayList<Ennemy> getFormation() {
         return formation;
     }
 

@@ -71,13 +71,13 @@ public class Game {
         init();
 
         while (isGameRunning()) {
-            StdDraw.clear(StdDraw.BLACK); // On efface tous ce qu'il y a sur l'interface
+            StdDraw.clear(StdDraw.WHITE); // On efface tous ce qu'il y a sur l'interface
 
             update(); // on met a jour les attributs de chaque éléments
             draw(); // on dessine chaques éléments
 
             StdDraw.show(); // on montre l'interface
-            StdDraw.pause(1); // on attend 30 milisecondes avant de recommencer
+            StdDraw.pause(40); // on attend 30 milisecondes avant de recommencer
         }
     }
 

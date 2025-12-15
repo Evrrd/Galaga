@@ -11,7 +11,7 @@ public class Moth extends Ennemy {
     public void update() {
         if (alive) {
             double limit = x + speed * direction;
-            if (((limit) < (0)) || ((limit) > (1 - proportion * 17))) {
+            if (((limit) < (0)) || ((limit) > (1 - proportion * 16))) {
                 direction *= -1;
             }
             x += speed * direction;

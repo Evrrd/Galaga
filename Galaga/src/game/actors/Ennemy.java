@@ -1,7 +1,6 @@
 package game.actors;
 
 import engine.StdDraw;
-import game.Parameter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
