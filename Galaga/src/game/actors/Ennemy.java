@@ -9,13 +9,12 @@ import java.nio.file.*;
 
 public class Ennemy {
     private String name;
-    private double x; // postion du joueur sur l'axe des abscisses
-    private double y; // position du joueur sur l'axe des ordonnées
-    private double proportion;
-    private double speed;
+    protected double x; // postion du joueur sur l'axe des abscisses
+    protected double y; // position du joueur sur l'axe des ordonnées
+    protected double proportion;
+    protected double speed;
     private int valeurScore;
-    private boolean alive = true; // état de vie de l'ennemi
-    private String spriteFile; // chemin du fichier sprite
+    protected boolean alive = true; // état de vie de l'ennemi
 
     public Ennemy(double xx, double yy) {
         x = xx;
@@ -49,6 +48,10 @@ public class Ennemy {
 
     public double getProportion() {
         return proportion;
+    }
+
+    public double getSpeed() {
+        return speed;
     }
 
     /**
@@ -120,34 +123,4 @@ public class Ennemy {
         alive = false;
     }
 
-    public void update() {
-        if (!alive)
-            return;
-        // move();
-    }
-
 }
-
-/*
- * class Bee extends Ennemy{
- * public Bee(double x, double y, double length, double speedX, double speedY,
- * String spriteFile) {
- * super(x, y, 0.006, 0.004, 0.003, "bee.spr");
- * }
- * 
- * @Override
- * protected void move() {
- * y -= speedY; //déplacement vers le bas
- * x += speedX; //déplacement horizontal
- * 
- * if (x <= 0.008 || x >= 0.920) {
- * speedX = -speedX; //change de direction
- * }
- * 
- * if (x < 0.00) {
- * alive = false; //l'ennemi sort de l'écran
- * }
- * }
- * 
- * }
- */

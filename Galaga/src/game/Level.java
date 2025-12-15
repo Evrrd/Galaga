@@ -2,7 +2,10 @@ package game;
 
 import java.util.LinkedHashSet;
 
+import game.actors.Bee;
+import game.actors.Butterfly;
 import game.actors.Ennemy;
+import game.actors.Moth;
 import game.actors.Shoot;
 
 public class Level {
@@ -43,10 +46,19 @@ public class Level {
     }
 
     public void makeAddEnnemy(String[] sArray) {
-        Ennemy E = new Ennemy(sArray[0], Double.valueOf(sArray[1]), Double.valueOf(sArray[2]),
-                Double.valueOf(sArray[3]), Integer.valueOf(sArray[4]), Double.valueOf(sArray[5]));
-
-        addEnnemy(E);
+        if (sArray[0].compareTo("Bee") == 0) {
+            Bee E = new Bee(sArray[0], Double.valueOf(sArray[1]), Double.valueOf(sArray[2]),
+                    Double.valueOf(sArray[3]), Integer.valueOf(sArray[4]), Double.valueOf(sArray[5]));
+            addEnnemy(E);
+        } else if (sArray[0].compareTo("Moth") == 0) {
+            Moth E = new Moth(sArray[0], Double.valueOf(sArray[1]), Double.valueOf(sArray[2]),
+                    Double.valueOf(sArray[3]), Integer.valueOf(sArray[4]), Double.valueOf(sArray[5]));
+            addEnnemy(E);
+        } else if (sArray[0].compareTo("Butterfly") == 0) {
+            Butterfly E = new Butterfly(sArray[0], Double.valueOf(sArray[1]), Double.valueOf(sArray[2]),
+                    Double.valueOf(sArray[3]), Integer.valueOf(sArray[4]), Double.valueOf(sArray[5]));
+            addEnnemy(E);
+        }
     }
 
     public LinkedHashSet<Ennemy> getFormation() {
@@ -54,6 +66,18 @@ public class Level {
     }
 
     public void update(Shoot[] listShootPlayer) {
+
+        for (Ennemy e : formation) {
+            if (e instanceof Bee) {
+                ((Bee) e).update();
+            } else if (e instanceof Moth) {
+                ((Moth) e).update();
+            } else if (e instanceof Butterfly) {
+                ((Butterfly) e).update();
+            }
+
+        }
+
         for (Shoot s : listShootPlayer) {
             if (s != null) {
                 for (Ennemy e : formation) {
@@ -74,5 +98,4 @@ public class Level {
             }
         }
     }
-
 }

@@ -77,7 +77,7 @@ public class Game {
             draw(); // on dessine chaques éléments
 
             StdDraw.show(); // on montre l'interface
-            StdDraw.pause(50); // on attend 30 milisecondes avant de recommencer
+            StdDraw.pause(1); // on attend 30 milisecondes avant de recommencer
         }
     }
 
