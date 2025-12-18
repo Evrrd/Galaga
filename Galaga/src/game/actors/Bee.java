@@ -1,21 +1,36 @@
 package game.actors;
 
-public class Bee extends Ennemy{
-    public Bee(double x, double y, double length, double speedX, double speedY, String spriteFile) {
-        super(x, y, 0.006, 0.004, 0.003, "bee.spr");
+public class Bee extends Ennemy {
+
+    private static int direction = -1;
+
+    private boolean canShoot;
+
+    public Bee(String n, double xx, double yy, double proportioEnn, int valSc, double speedEnn) {
+        super(n, xx, yy, proportioEnn, valSc, speedEnn);
+
+        canShoot = false;
     }
 
-    public void move() {
-        y -= speedY; //déplacement vers le bas
-        x += speedX; //déplacement horizontal
+    public void update() {
+        if (alive) {
+            double limit = x + speed * direction;
+            if (((limit) <= (0)) || ((limit) >= (1 - proportion * 16))) {
+                direction *= -1;
+            } else {
+                x += speed * direction;
+            }
 
-        if (x <= 0.008 || x >= 0.920) {
-            speedX = -speedX; //change de direction
         }
 
-        if (y < 0.00) {
-            alive = false; //l'ennemi sort de l'écran
-        }
+    }
+
+    public void changeDirection() {
+        direction *= -1;
+    }
+
+    public boolean canBeeShoot() {
+        return canShoot;
     }
 
 }

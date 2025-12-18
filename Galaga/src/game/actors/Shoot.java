@@ -9,82 +9,105 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-
-
-
 public class Shoot {
 
-
     private double x;
-    
 
     private double y;
-    private double length;
-    public boolean drew;
+    private double proportion = 0.004;
 
+    private int direction;
+    private boolean alive = true;
 
-    public Shoot(double xx, double yy, double len){
+    public Shoot(double xx, double yy, int ddirection) {
         x = xx;
         y = yy;
-        length = len; // ?
+        direction = ddirection;
+
     }
+
     public double getY() {
         return y;
     }
 
-    public void draw(){
-        drew = true;
-        Path cheminT1 = Paths.get("Galaga/ressources/sprites/shoot.spr");
-        try (BufferedReader reader = Files.newBufferedReader(cheminT1)) {
-            String line = null;
-            double i = 0.0;
-            double j = 0.0;
-            while ((line = reader.readLine()) != null) {
-                for (char c : line.toCharArray()) {
-                    switch (c) {
-                        case 'R':
-                            StdDraw.setPenColor(StdDraw.RED);
-                            break;
-                        case 'B':
-                            StdDraw.setPenColor(StdDraw.BLUE);
-                            break;
-                        case 'G':
-                            StdDraw.setPenColor(StdDraw.GREEN);
-                            break;
-                        case 'Y':
-                            StdDraw.setPenColor(StdDraw.YELLOW);
-                            break;
-                        case 'W':
-                            StdDraw.setPenColor(StdDraw.WHITE);
-                            break;
-                        case 'N':
-                            StdDraw.setPenColor(StdDraw.BLACK);
-                            break;
+    public double getX() {
+        return x;
+    }
+
+    public double getProportion() {
+        return proportion;
+    }
+
+    public void destroy() {
+        alive = false;
+    }
+
+    public boolean getAlive() {
+        return alive;
+    }
+
+    public void draw() {
+        if (alive == true) {
+            Path cheminT1 = Paths.get("ressources/sprites/shoot.spr");
+            try (BufferedReader reader = Files.newBufferedReader(cheminT1)) {
+                String line = null;
+                double i = 0.0;
+                double j = 0.0;
+                while ((line = reader.readLine()) != null) {
+                    for (char c : line.toCharArray()) {
+                        switch (c) {
+                            case 'R':
+                                StdDraw.setPenColor(StdDraw.RED);
+                                break;
+                            case 'B':
+                                StdDraw.setPenColor(StdDraw.BLUE);
+                                break;
+                            case 'G':
+                                StdDraw.setPenColor(StdDraw.GREEN);
+                                break;
+                            case 'Y':
+                                StdDraw.setPenColor(StdDraw.YELLOW);
+                                break;
+                            case 'W':
+                                StdDraw.setPenColor(StdDraw.WHITE);
+                                break;
+                            case 'N':
+                                StdDraw.setPenColor(StdDraw.BLACK);
+                                break;
+                        }
+                        StdDraw.filledSquare(x + i, y - j, proportion); // change prop
+                        i += proportion; // change propor
                     }
-                    StdDraw.filledSquare(x + i, y - j, Parameter.proportion_player);
-                    i += Parameter.proportion_player;
+                    i = 0.0;
+                    j += proportion; // change propor
                 }
-                i = 0.0;
-                j += Parameter.proportion_player;
+            } catch (IOException ieo) {
+                System.out.println(ieo);
             }
-        } catch (IOException ieo) {
-            System.out.println(ieo);
         }
     }
 
-    public void undraw(){
-        drew = false;
-        StdDraw.setPenColor(StdDraw.BLACK);
-        for (double i = 0.0; i < Parameter.shoot_width * Parameter.proportion_player; i = i + Parameter.proportion_player){
-            for (double j = 0.0 ; j < Parameter.shoot_heigth * Parameter.proportion_player; j = j + Parameter.proportion_player){
-                StdDraw.filledSquare(x + i, y - j, Parameter.proportion_player);
-                j += Parameter.proportion_player;
-            }
-        }
-    }
-    
-    public void moving(double k){
+    // public void undraw() {
+    // drew = false;
+    // StdDraw.setPenColor(StdDraw.BLACK);
+    // for (double i = 0.0; i < Parameter.shoot_width * Parameter.proportion_player;
+    // i = i
+    // + Parameter.proportion_player) {
+    // for (double j = 0.0; j < Parameter.shoot_heigth *
+    // Parameter.proportion_player; j = j
+    // + Parameter.proportion_player) {
+    // StdDraw.filledSquare(x + i, y - j, Parameter.proportion_player);
+    // j += Parameter.proportion_player;
+    // }
+    // }
+    // }
+
+    public void moving(double k) {
         y += k;
+    }
+
+    public void update() {
+        y += Parameter.shoot_speed * direction;
     }
 
 }
