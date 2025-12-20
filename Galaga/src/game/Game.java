@@ -19,6 +19,8 @@ public class Game {
 
     public Level levelInst;
 
+    private int time = 0;
+
     /**
      * Créé un jeu avec tous les éléments qui le composent
      */
@@ -70,13 +72,20 @@ public class Game {
         init();
 
         while (isGameRunning()) {
-            StdDraw.clear(StdDraw.WHITE); // On efface tous ce qu'il y a sur l'interface
+            StdDraw.clear(StdDraw.BLACK); // On efface tous ce qu'il y a sur l'interface
 
             update(); // on met a jour les attributs de chaque éléments
             draw(); // on dessine chaques éléments
 
             StdDraw.show(); // on montre l'interface
-            StdDraw.pause(5); // on attend 30 milisecondes avant de recommencer
+            StdDraw.pause(30); // on attend 30 milisecondes avant de recommencer
+            // time += 4000;
+            // if (time > levelInst.getCooldownMissile()) {
+            // levelInst.makeEnnemyShoot();
+            // time = 0;
+            // }
+
+            levelInst.makeEnnemyShoot();
         }
     }
 
@@ -97,6 +106,7 @@ public class Game {
         drawZoneLifeLevel();
         player.draw();
         drawEnnemy();
+        levelInst.drawEnnemyShoot();
 
     }
 

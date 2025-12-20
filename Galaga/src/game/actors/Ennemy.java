@@ -13,7 +13,7 @@ public class Ennemy {
     protected double speed;
     protected int valeurScore;
     protected boolean alive = true; // état de vie de l'ennemi
-    protected boolean canShoot;
+    protected boolean canAction;
 
     public Ennemy(double xx, double yy) {
         x = xx;
@@ -27,7 +27,7 @@ public class Ennemy {
         proportion = (proportioEnn / 10) - 0.002;
         valeurScore = valSc;
         speed = speedEnn;
-        canShoot = false;
+        canAction = false;
     }
 
     public boolean isAlive() {
@@ -52,6 +52,14 @@ public class Ennemy {
 
     public double getSpeed() {
         return speed;
+    }
+
+    public boolean getCanAction() {
+        return canAction;
+    }
+
+    public void setCanAction(boolean b) {
+        canAction = b;
     }
 
     /**
@@ -87,12 +95,30 @@ public class Ennemy {
             while ((line = reader.readLine()) != null) {
                 for (char c : line.toCharArray()) {
                     switch (c) {
-                        case 'R' -> { StdDraw.setPenColor(StdDraw.RED); break; }
-                        case 'B' -> { StdDraw.setPenColor(StdDraw.BLUE); break; }
-                        case 'G' -> { StdDraw.setPenColor(StdDraw.GREEN); break; }
-                        case 'Y' -> { StdDraw.setPenColor(StdDraw.YELLOW); break; }
-                        case 'W' -> { StdDraw.setPenColor(StdDraw.WHITE); break; }
-                        case 'N' -> { StdDraw.setPenColor(StdDraw.BLACK); break; }
+                        case 'R' -> {
+                            StdDraw.setPenColor(StdDraw.RED);
+                            break;
+                        }
+                        case 'B' -> {
+                            StdDraw.setPenColor(StdDraw.BLUE);
+                            break;
+                        }
+                        case 'G' -> {
+                            StdDraw.setPenColor(StdDraw.GREEN);
+                            break;
+                        }
+                        case 'Y' -> {
+                            StdDraw.setPenColor(StdDraw.YELLOW);
+                            break;
+                        }
+                        case 'W' -> {
+                            StdDraw.setPenColor(StdDraw.WHITE);
+                            break;
+                        }
+                        case 'N' -> {
+                            StdDraw.setPenColor(StdDraw.BLACK);
+                            break;
+                        }
                     }
                     StdDraw.filledSquare(x + i, y - j, proportion); // change prop
                     i += proportion; // here 2
@@ -108,6 +134,7 @@ public class Ennemy {
     // private abstract void move();
 
     public void destroy() {
+        canAction = false;
         alive = false;
     }
 
