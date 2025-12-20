@@ -11,8 +11,9 @@ public class Ennemy {
     protected double y; // position du joueur sur l'axe des ordonnées
     protected double proportion;
     protected double speed;
-    private int valeurScore;
+    protected int valeurScore;
     protected boolean alive = true; // état de vie de l'ennemi
+    protected boolean canShoot;
 
     public Ennemy(double xx, double yy) {
         x = xx;
@@ -23,9 +24,10 @@ public class Ennemy {
         name = n;
         x = xx;
         y = yy;
-        proportion = proportioEnn / 10 - 0.002;
+        proportion = (proportioEnn / 10) - 0.002;
         valeurScore = valSc;
         speed = speedEnn;
+        canShoot = false;
     }
 
     public boolean isAlive() {

@@ -2,7 +2,7 @@ package game.actors;
 
 public class Bee extends Ennemy {
 
-    private static int direction = -1;
+    private static int direction = 1;
 
     private boolean canShoot;
 
@@ -14,15 +14,10 @@ public class Bee extends Ennemy {
 
     public void update() {
         if (alive) {
-            double limit = x + speed * direction;
-            if (((limit) <= (0)) || ((limit) >= (1 - proportion * 16))) {
-                direction *= -1;
-            } else {
-                x += speed * direction;
-            }
 
+            x += speed * direction;
+            // System.out.println("position x : " + x + "\n" + "direction : " + direction);
         }
-
     }
 
     public void changeDirection() {
@@ -31,6 +26,10 @@ public class Bee extends Ennemy {
 
     public boolean canBeeShoot() {
         return canShoot;
+    }
+
+    public int getDirection() {
+        return direction;
     }
 
 }

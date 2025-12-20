@@ -50,7 +50,6 @@ public class Game {
             }
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -77,7 +76,7 @@ public class Game {
             draw(); // on dessine chaques éléments
 
             StdDraw.show(); // on montre l'interface
-            StdDraw.pause(40); // on attend 30 milisecondes avant de recommencer
+            StdDraw.pause(5); // on attend 30 milisecondes avant de recommencer
         }
     }
 

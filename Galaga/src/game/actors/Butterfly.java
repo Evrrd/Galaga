@@ -10,10 +10,6 @@ public class Butterfly extends Ennemy {
 
     public void update() {
         if (alive) {
-            double limit = x + speed * direction;
-            if (((limit) < (0)) || ((limit) > (1 - proportion * 16))) {
-                direction *= -1;
-            }
             x += speed * direction;
         }
     }

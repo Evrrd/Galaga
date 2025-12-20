@@ -50,6 +50,8 @@ public class Level {
             Bee E = new Bee(sArray[0], Double.valueOf(sArray[1]), Double.valueOf(sArray[2]),
                     Double.valueOf(sArray[3]), Integer.valueOf(sArray[4]), Double.valueOf(sArray[5]));
             addEnnemy(E);
+            System.out.print(E.getX() + " | ");
+
         } else if (sArray[0].compareTo("Moth") == 0) {
             Moth E = new Moth(sArray[0], Double.valueOf(sArray[1]), Double.valueOf(sArray[2]),
                     Double.valueOf(sArray[3]), Integer.valueOf(sArray[4]), Double.valueOf(sArray[5]));
@@ -67,16 +69,74 @@ public class Level {
 
     public void update(Shoot[] listShootPlayer) {
 
+        boolean changeDirBee = false;
+        boolean changeDirMoth = false;
+        boolean changeDirButterfly = false;
+
         for (Ennemy e : formation) {
             if (e instanceof Bee) {
+
                 ((Bee) e).update();
+                if ((e.getX() < 0) || (e.getX() > 1 - e.getProportion() * 16)) {
+                    changeDirBee = true;
+                }
             } else if (e instanceof Moth) {
                 ((Moth) e).update();
+                if ((e.getX() < 0) || (e.getX() > 1 - e.getProportion() * 16)) {
+                    changeDirMoth = true;
+                }
             } else if (e instanceof Butterfly) {
                 ((Butterfly) e).update();
+                if ((e.getX() < 0) || (e.getX() > 1 - e.getProportion() * 16)) {
+                    changeDirButterfly = true;
+                }
             }
-
         }
+
+        for (Ennemy e : formation) {
+            if (e instanceof Bee) {
+                if (changeDirBee == true) {
+                    ((Bee) e).changeDirection();
+                    changeDirBee = false;
+                }
+            } else if (e instanceof Moth) {
+                if (changeDirMoth == true) {
+                    ((Moth) e).changeDirection();
+                    changeDirMoth = false;
+                }
+            } else if (e instanceof Butterfly) {
+                if (changeDirButterfly == true) {
+                    ((Butterfly) e).changeDirection();
+                    changeDirButterfly = false;
+                }
+            }
+        }
+
+        // System.out.println();
+        // for (int i = 0; i < formation.size(); i++) {
+        // if (formation.get(i) instanceof Bee) {
+        // if (i == 31 || i == 43) {
+        // System.out.println("Abeille : " + i + " x : " + formation.get(i).getX() + "
+        // direction "
+        // + ((Bee) formation.get(i)).getDirection() + "speed : " +
+        // formation.get(i).getSpeed());
+        // }
+
+        // ((Bee) formation.get(i)).update();
+
+        // if (i == 31 || i == 43) {
+        // System.out.println("Abeille : " + i + " x : " + formation.get(i).getX() + "
+        // direction "
+        // + ((Bee) formation.get(i)).getDirection() + "speed : " +
+        // formation.get(i).getSpeed());
+        // }
+        // } else if (formation.get(i) instanceof Moth) {
+        // ((Moth) formation.get(i)).update();
+        // } else if (formation.get(i) instanceof Butterfly) {
+        // ((Butterfly) formation.get(i)).update();
+        // }
+
+        // }
 
         for (Shoot s : listShootPlayer) {
             if (s != null) {
