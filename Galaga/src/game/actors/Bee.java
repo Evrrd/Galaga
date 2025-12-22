@@ -6,8 +6,8 @@ public class Bee extends Ennemy {
 
     private boolean canShoot;
 
-    public Bee(String n, double xx, double yy, double proportioEnn, int valSc, double speedEnn) {
-        super(n, xx, yy, proportioEnn, valSc, speedEnn);
+    public Bee(String n, double xx, double yy, double proportioEnn, int valSc, double speedEnn, int indice) {
+        super(n, xx, yy, proportioEnn, valSc, speedEnn, indice);
 
         canShoot = false;
     }

@@ -21,6 +21,9 @@ public class Player {
 
     private Shoot[] listShootPlayer;
 
+    private boolean alive = true;
+    private boolean canShoot = false;
+
     /**
      * Créé un joueur.
      * 
@@ -35,61 +38,86 @@ public class Player {
 
     }
 
+    public double getX() {
+        return x;
+    }
+
+    public double getProportion() {
+        return proportionPlayer;
+    }
+
     public Shoot[] getListShootPlayer() {
         return listShootPlayer;
+    }
+
+    public void setAlive(Boolean b) {
+        alive = b;
+    }
+
+    public boolean getALive() {
+        return alive;
+    }
+
+    public void setCanShoot(boolean b) {
+        canShoot = b;
+    }
+
+    public boolean getCanShoot() {
+        return canShoot;
     }
 
     /**
      * Dessine le joueur, ici c'est un rond rouge
      */
     public void draw() {
+        if (alive) {
+            Path cheminT1 = Paths.get("ressources/sprites/ship.spr");
+            try (BufferedReader reader = Files.newBufferedReader(cheminT1)) {
+                String line = null;
+                double i = 0.0;
+                double j = 0.0;
+                while ((line = reader.readLine()) != null) {
+                    for (char c : line.toCharArray()) {
+                        switch (c) {
+                            case 'R':
+                                StdDraw.setPenColor(StdDraw.RED);
+                                break;
+                            case 'B':
+                                StdDraw.setPenColor(StdDraw.BLUE);
+                                break;
+                            case 'G':
+                                StdDraw.setPenColor(StdDraw.GREEN);
+                                break;
+                            case 'Y':
+                                StdDraw.setPenColor(StdDraw.YELLOW);
+                                break;
+                            case 'W':
+                                StdDraw.setPenColor(StdDraw.WHITE);
+                                break;
+                            case 'N':
+                                StdDraw.setPenColor(StdDraw.BLACK);
+                                break;
+                        }
 
-        Path cheminT1 = Paths.get("ressources/sprites/ship.spr");
-        try (BufferedReader reader = Files.newBufferedReader(cheminT1)) {
-            String line = null;
-            double i = 0.0;
-            double j = 0.0;
-            while ((line = reader.readLine()) != null) {
-                for (char c : line.toCharArray()) {
-                    switch (c) {
-                        case 'R':
-                            StdDraw.setPenColor(StdDraw.RED);
-                            break;
-                        case 'B':
-                            StdDraw.setPenColor(StdDraw.BLUE);
-                            break;
-                        case 'G':
-                            StdDraw.setPenColor(StdDraw.GREEN);
-                            break;
-                        case 'Y':
-                            StdDraw.setPenColor(StdDraw.YELLOW);
-                            break;
-                        case 'W':
-                            StdDraw.setPenColor(StdDraw.WHITE);
-                            break;
-                        case 'N':
-                            StdDraw.setPenColor(StdDraw.BLACK);
-                            break;
+                        StdDraw.filledSquare(x + i, y - j, proportionPlayer);
+                        i += proportionPlayer;
                     }
-
-                    StdDraw.filledSquare(x + i, y - j, proportionPlayer);
-                    i += proportionPlayer;
+                    i = 0.0;
+                    j += proportionPlayer;
                 }
-                i = 0.0;
-                j += proportionPlayer;
+            } catch (IOException ieo) {
+                System.out.println(ieo);
             }
-        } catch (IOException ieo) {
-            System.out.println(ieo);
-        }
 
-        if (listShootPlayer[0] != null) {
-            listShootPlayer[0].draw();
-        }
-        if (listShootPlayer[1] != null) {
-            listShootPlayer[1].draw();
-        }
-        if (listShootPlayer[2] != null) {
-            listShootPlayer[2].draw();
+            if (listShootPlayer[0] != null) {
+                listShootPlayer[0].draw();
+            }
+            if (listShootPlayer[1] != null) {
+                listShootPlayer[1].draw();
+            }
+            if (listShootPlayer[2] != null) {
+                listShootPlayer[2].draw();
+            }
         }
 
         // StdDraw.setPenColor(StdDraw.RED);
@@ -115,24 +143,25 @@ public class Player {
         }
 
         if (StdDraw.isKeyPressed(32)) {
+            if (canShoot == true) {
+                if (listShootPlayer[0] == null) {
+                    listShootPlayer[0] = new Shoot(
+                            x + (lengthPlayer / 2) * proportionPlayer
+                                    - (1 / 2) * proportionPlayer,
+                            y + (lengthPlayer / 2) * proportionPlayer, 1);
 
-            if (listShootPlayer[0] == null) {
-                listShootPlayer[0] = new Shoot(
-                        x + (lengthPlayer / 2) * proportionPlayer
-                                - (1 / 2) * proportionPlayer,
-                        y + (lengthPlayer / 2) * proportionPlayer, 1);
+                } else if (listShootPlayer[1] == null) {
+                    listShootPlayer[1] = new Shoot(
+                            x + (lengthPlayer / 2) * proportionPlayer
+                                    - (1 / 2) * proportionPlayer,
+                            y + (lengthPlayer / 2) * proportionPlayer, 1);
 
-            } else if (listShootPlayer[1] == null) {
-                listShootPlayer[1] = new Shoot(
-                        x + (lengthPlayer / 2) * proportionPlayer
-                                - (1 / 2) * proportionPlayer,
-                        y + (lengthPlayer / 2) * proportionPlayer, 1);
-
-            } else if (listShootPlayer[2] == null) {
-                listShootPlayer[2] = new Shoot(
-                        x + (lengthPlayer / 2) * proportionPlayer
-                                - (1 / 2) * proportionPlayer,
-                        y + (lengthPlayer / 2) * proportionPlayer, 1);
+                } else if (listShootPlayer[2] == null) {
+                    listShootPlayer[2] = new Shoot(
+                            x + (lengthPlayer / 2) * proportionPlayer
+                                    - (1 / 2) * proportionPlayer,
+                            y + (lengthPlayer / 2) * proportionPlayer, 1);
+                }
             }
 
         }

@@ -14,13 +14,14 @@ public class Ennemy {
     protected int valeurScore;
     protected boolean alive = true; // état de vie de l'ennemi
     protected boolean canAction;
+    protected int indiceFormation;
 
     public Ennemy(double xx, double yy) {
         x = xx;
         y = yy;
     }
 
-    public Ennemy(String n, double xx, double yy, double proportioEnn, int valSc, double speedEnn) {
+    public Ennemy(String n, double xx, double yy, double proportioEnn, int valSc, double speedEnn, int iF) {
         name = n;
         x = xx;
         y = yy;
@@ -28,6 +29,7 @@ public class Ennemy {
         valeurScore = valSc;
         speed = speedEnn;
         canAction = false;
+        indiceFormation = iF;
     }
 
     public boolean isAlive() {
@@ -60,6 +62,10 @@ public class Ennemy {
 
     public void setCanAction(boolean b) {
         canAction = b;
+    }
+
+    public int getIndice() {
+        return indiceFormation;
     }
 
     /**

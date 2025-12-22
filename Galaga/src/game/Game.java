@@ -26,7 +26,6 @@ public class Game {
      */
     public Game() {
         player = new Player(0.472, 0.2);
-        Level(1);
 
     }
 
@@ -38,22 +37,26 @@ public class Game {
     }
 
     public void Level(int a) {
+
         String s = "level" + a + ".lvl";
         Path cheminT1 = Paths.get("ressources/levels/" + s);
+
         try (BufferedReader reader = Files.newBufferedReader(cheminT1)) {
             String line = null;
 
             String[] lineArray = parseStrings(reader.readLine()); // first line
             levelInst = new Level(lineArray[0], lineArray[1], lineArray[2], lineArray[3]);
-
+            int indice = 0;
             while ((line = reader.readLine()) != null) {
                 lineArray = parseStrings(line);
-                levelInst.makeAddEnnemy(lineArray);
+                levelInst.makeAddEnnemy(lineArray, indice);
+                indice += 1;
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+        levelInst.initShooter();
     }
 
     /**
@@ -79,14 +82,24 @@ public class Game {
 
             StdDraw.show(); // on montre l'interface
             StdDraw.pause(30); // on attend 30 milisecondes avant de recommencer
-            // time += 4000;
-            // if (time > levelInst.getCooldownMissile()) {
-            // levelInst.makeEnnemyShoot();
-            // time = 0;
-            // }
+            time += 3000;
+            if (time > 2000) {
+                player.setCanShoot(true);
+            }
+            if (time > levelInst.getCooldownMissile()) {
+                levelInst.makeEnnemyShoot();
+                time = 0;
+            }
 
-            levelInst.makeEnnemyShoot();
         }
+    }
+
+    public boolean lose() {
+        if (StdDraw.isKeyPressed(32)) {
+            player = new Player(0.472, 0.2);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -95,6 +108,14 @@ public class Game {
      * @return true car on n'as pas encore de conidtions d'arrêt
      */
     private boolean isGameRunning() {
+        if (player.getALive() == false) {
+            while (lose()) {
+
+            }
+            player.setCanShoot(false);
+            StdDraw.pause(100);
+        }
+
         return true;
     }
 
@@ -133,5 +154,9 @@ public class Game {
     private void update() {
         player.update();
         levelInst.update(player.getListShootPlayer());
+        if (levelInst.updateEnnemyShoot(player)) {
+            // player has been killed
+
+        }
     }
 }

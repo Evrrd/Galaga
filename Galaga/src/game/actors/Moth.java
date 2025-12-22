@@ -4,8 +4,8 @@ public class Moth extends Ennemy {
 
     private static int direction = -1;
 
-    public Moth(String n, double xx, double yy, double proportioEnn, int valSc, double speedEnn) {
-        super(n, xx, yy, proportioEnn, valSc, speedEnn);
+    public Moth(String n, double xx, double yy, double proportioEnn, int valSc, double speedEnn, int indice) {
+        super(n, xx, yy, proportioEnn, valSc, speedEnn, indice);
     }
 
     public void update() {

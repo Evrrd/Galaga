@@ -1,6 +1,7 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 
 import engine.StdDraw;
@@ -8,6 +9,7 @@ import game.actors.Bee;
 import game.actors.Butterfly;
 import game.actors.Ennemy;
 import game.actors.Moth;
+import game.actors.Player;
 import game.actors.Shoot;
 
 public class Level {
@@ -19,17 +21,18 @@ public class Level {
     private int nbBee = 0;
     private int nbButterfly = 0;
     private int nbMoth = 0;
-    private Shoot[] listEShoots;
-
+    private LinkedList<Shoot> lLEnnShoot;
     private ArrayList<Ennemy> formation;
+    private ArrayList<Ennemy> ennCanShoot;
 
     public Level(String n, String sF, String cS, String cM) {
         name = n;
         speedFormation = Double.valueOf(sF);
         cooldownAttaque = Integer.valueOf(cS);
         cooldownMissile = Integer.valueOf(cM);
-        formation = new ArrayList<Ennemy>();
-        listEShoots = new Shoot[10];
+        formation = new ArrayList<Ennemy>(); // Formation des ennemies
+        lLEnnShoot = new LinkedList<Shoot>(); // Linked List des tirs Ennemi
+        ennCanShoot = new ArrayList<Ennemy>(); // Liste des ennemies qui peuvent tirer
     }
 
     public String getName() {
@@ -52,25 +55,33 @@ public class Level {
         formation.add(e);
     }
 
-    public void makeAddEnnemy(String[] sArray) {
+    public void makeAddEnnemy(String[] sArray, int indice) {
         if (sArray[0].compareTo("Bee") == 0) {
             Bee E = new Bee(sArray[0], Double.valueOf(sArray[1]), Double.valueOf(sArray[2]),
-                    Double.valueOf(sArray[3]), Integer.valueOf(sArray[4]), Double.valueOf(sArray[5]));
+                    Double.valueOf(sArray[3]), Integer.valueOf(sArray[4]), Double.valueOf(sArray[5]), indice);
             addEnnemy(E);
             nbBee += 1;
 
         } else if (sArray[0].compareTo("Butterfly") == 0) {
             Butterfly E = new Butterfly(sArray[0], Double.valueOf(sArray[1]), Double.valueOf(sArray[2]),
-                    Double.valueOf(sArray[3]), Integer.valueOf(sArray[4]), Double.valueOf(sArray[5]));
+                    Double.valueOf(sArray[3]), Integer.valueOf(sArray[4]), Double.valueOf(sArray[5]), indice);
             addEnnemy(E);
             nbButterfly += 1;
 
         } else if (sArray[0].compareTo("Moth") == 0) {
             Moth E = new Moth(sArray[0], Double.valueOf(sArray[1]), Double.valueOf(sArray[2]),
-                    Double.valueOf(sArray[3]), Integer.valueOf(sArray[4]), Double.valueOf(sArray[5]));
+                    Double.valueOf(sArray[3]), Integer.valueOf(sArray[4]), Double.valueOf(sArray[5]), indice);
             addEnnemy(E);
             nbMoth += 1;
         }
+    }
+
+    public void initShooter() {
+        for (int i = 32; i < 43; i++) {
+            ennCanShoot.add(formation.get(i));
+            formation.get(i).setCanAction(true);
+        }
+
     }
 
     public ArrayList<Ennemy> getFormation() {
@@ -84,11 +95,36 @@ public class Level {
         // }
         // }
 
-        for (Shoot s : listEShoots) {
+        for (Shoot s : lLEnnShoot) {
             if (s != null) {
                 s.draw();
             }
         }
+    }
+
+    public boolean updateEnnemyShoot(Player playerInst) {
+        for (Shoot s : lLEnnShoot) {
+            s.update();
+
+            // Y player -> 0.2
+            if (s != null) {
+                if ((s.getX() >= playerInst.getX())
+                        && s.getX() <= playerInst.getX() + playerInst.getProportion() * 15) {
+                    if ((s.getY() - s.getProportion() * 6 <= 0.2)
+                            && (s.getY() >= 0.2 - playerInst.getProportion() * 15)) {
+                        playerInst.setAlive(false);
+                        lLEnnShoot.clear();
+                        return true;
+                    }
+                }
+            }
+            if (s.getY() - s.getProportion() * 6 < 0.1) {
+                s.destroy();
+                s = null;
+            }
+
+        }
+        return false;
     }
 
     public void update(Shoot[] listShootPlayer) {
@@ -97,9 +133,9 @@ public class Level {
         boolean changeDirMoth = false;
         boolean changeDirButterfly = false;
 
+        // gestion déplacement ennemy
         for (Ennemy e : formation) {
             if (e instanceof Bee) {
-
                 ((Bee) e).update();
                 if ((e.getX() < 0) || (e.getX() > 1 - e.getProportion() * 16)) {
                     changeDirBee = true;
@@ -117,15 +153,14 @@ public class Level {
             }
         }
 
+        // gestion changement de direction
         for (int i = 0; i < formation.size(); i++) {
             if (formation.get(i) instanceof Bee) {
                 if (changeDirBee == true) {
                     ((Bee) formation.get(i)).changeDirection();
                     changeDirBee = false;
                 }
-                if (i > 32) {
-                    formation.get(i).setCanAction(true); // position of Bee en bas of the formation
-                }
+
             } else if (formation.get(i) instanceof Moth) {
                 if (changeDirMoth == true) {
                     ((Moth) formation.get(i)).changeDirection();
@@ -185,14 +220,14 @@ public class Level {
 
         // }
 
-        for (int i = 0; i < 10; i++) {
-            if (listEShoots[i] != null) {
-                listEShoots[i].update();
-                if (listEShoots[i].getY() - listEShoots[i].getProportion() * 6 < 0.1) {
-                    listEShoots[i] = null;
-                }
-            }
-        }
+        // for (int i = 0; i < 10; i++) {
+        // if (listEShoots[i] != null) {
+        // listEShoots[i].update();
+        // if (listEShoots[i].getY() - listEShoots[i].getProportion() * 6 < 0.1) {
+        // listEShoots[i] = null;
+        // }
+        // }
+        // }
 
         for (Shoot s : listShootPlayer) {
             if (s != null) {
@@ -206,11 +241,18 @@ public class Level {
                         if ((posShootX >= e.getX()) && (posShootX <= e.getX() + e.getProportion() * 17)) {
                             if (posShootY >= e.getY()) {
                                 if (e instanceof Bee) {
-                                    nbBee -= 1;
+
+                                    if (ennCanShoot.contains(e)) {
+                                        ennCanShoot.remove(e);
+                                        e.setCanAction(false);
+                                        formation.get(e.getIndice() - nbBee / 2).setCanAction(true);
+                                        ennCanShoot.add(formation.get(e.getIndice() - nbBee / 2));
+                                    }
+
                                 } else if (e instanceof Butterfly) {
-                                    nbButterfly -= 1;
+                                    // nbButterfly -= 1;
                                 } else if (e instanceof Moth) {
-                                    nbMoth -= 1;
+                                    // nbMoth -= 1;
                                 }
                                 e.destroy();
                                 s.destroy();
@@ -226,17 +268,20 @@ public class Level {
 
     public void makeEnnemyShoot() {
         Random r = new Random();
-        int randomEnnemy = r.nextInt(0, 8);
-        int posRE = 0;
-        for (int i = nbButterfly + nbMoth - 1; i < nbButterfly + nbMoth + nbBee - 1; i++) { // 20 -> 43 for Bee
-            if (formation.get(i).getCanAction() == true) {
-                randomEnnemy -= 1;
-            }
-            if (randomEnnemy == 0) {
-                posRE = i;
-                break;
+        int randomEnnemy = r.nextInt(0, ennCanShoot.size());
+        // if (posRE != 0) {
+        // lLEnnShoot.add(new Shoot(formation.get(posRE).getX() +
+        // formation.get(posRE).getProportion() * 8,
+        // formation.get(posRE).getY() - formation.get(posRE).getProportion() * 11,
+        // -1));
 
-            }
+        // }
+        if (ennCanShoot.get(randomEnnemy).getCanAction() == true) {
+            lLEnnShoot
+                    .add(new Shoot(
+                            ennCanShoot.get(randomEnnemy).getX() + ennCanShoot.get(randomEnnemy).getProportion() * 8,
+                            ennCanShoot.get(randomEnnemy).getY() - ennCanShoot.get(randomEnnemy).getProportion() * 11,
+                            -1));
         }
 
         // for (Shoot s : listEShoots) {
@@ -248,17 +293,24 @@ public class Level {
         // }
         // }
 
-        for (int i = 0; i < 10; i++) {
-            if (listEShoots[i] == null) {
-                listEShoots[i] = new Shoot(formation.get(posRE).getX() +
-                        formation.get(posRE).getProportion() * 16,
-                        formation.get(posRE).getY() - formation.get(posRE).getProportion() * 11, -1);
+        // for (int i = 0; i < 10; i++) {
+        // if (listEShoots[i] == null) {
+        // listEShoots[i] = new Shoot(formation.get(posRE).getX() +
+        // formation.get(posRE).getProportion() * 16,
+        // formation.get(posRE).getY() - formation.get(posRE).getProportion() * 11, -1);
 
-                break;
-            } else {
-                i += 1;
-            }
-        }
+        // break;
+        // } else {
+        // i += 1;
+        // }
+        // }
+        // if (posRE != 0) {
+        // lLEnnShoot.add(new Shoot(formation.get(posRE).getX() +
+        // formation.get(posRE).getProportion() * 8,
+        // formation.get(posRE).getY() - formation.get(posRE).getProportion() * 11,
+        // -1));
+
+        // }
 
     }
 
