@@ -1,6 +1,5 @@
 package game.actors;
 
-import game.Parameter;
 import engine.StdDraw;
 
 import java.io.BufferedReader;
@@ -87,27 +86,12 @@ public class Shoot {
         }
     }
 
-    // public void undraw() {
-    // drew = false;
-    // StdDraw.setPenColor(StdDraw.BLACK);
-    // for (double i = 0.0; i < Parameter.shoot_width * Parameter.proportion_player;
-    // i = i
-    // + Parameter.proportion_player) {
-    // for (double j = 0.0; j < Parameter.shoot_heigth *
-    // Parameter.proportion_player; j = j
-    // + Parameter.proportion_player) {
-    // StdDraw.filledSquare(x + i, y - j, Parameter.proportion_player);
-    // j += Parameter.proportion_player;
-    // }
-    // }
-    // }
-
     public void moving(double k) {
         y += k;
     }
 
     public void update() {
-        y += Parameter.shoot_speed * direction;
+        y += 0.01 * direction;
     }
 
 }

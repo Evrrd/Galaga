@@ -15,6 +15,7 @@ public class Ennemy {
     protected boolean alive = true; // état de vie de l'ennemi
     protected boolean canAction;
     protected int indiceFormation;
+    protected boolean isAttaque = false; //
 
     public Ennemy(double xx, double yy) {
         x = xx;
@@ -27,6 +28,7 @@ public class Ennemy {
         y = yy;
         proportion = (proportioEnn / 10) - 0.002;
         valeurScore = valSc;
+
         speed = speedEnn;
         canAction = false;
         indiceFormation = iF;
@@ -44,6 +46,10 @@ public class Ennemy {
         return y;
     }
 
+    public void setY(double d) {
+        y = d;
+    }
+
     public void setAlive(boolean b) {
         alive = b;
     }
@@ -56,6 +62,11 @@ public class Ennemy {
         return speed;
     }
 
+    public int getScore() {
+
+        return valeurScore;
+    }
+
     public boolean getCanAction() {
         return canAction;
     }
@@ -66,6 +77,14 @@ public class Ennemy {
 
     public int getIndice() {
         return indiceFormation;
+    }
+
+    public void setIsAttaque(boolean b) {
+        isAttaque = b;
+    }
+
+    public boolean getIsAttaque() {
+        return isAttaque;
     }
 
     /**
@@ -142,6 +161,10 @@ public class Ennemy {
     public void destroy() {
         canAction = false;
         alive = false;
+    }
+
+    public void updateMoving() {
+        y -= speed;
     }
 
 }

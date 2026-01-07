@@ -18,28 +18,31 @@ public class Player {
 
     private double proportionPlayer = 0.004;
     private int lengthPlayer = 15;
-
+    private int score;
     private Shoot[] listShootPlayer;
 
     private boolean alive = true;
     private boolean canShoot = false;
+    private int nb_life = 3;
 
-    /**
-     * Créé un joueur.
-     * 
-     * @param x      postion du joueur sur l'axe des abscisses
-     * @param y      position du joueur sur l'axe des ordonnées
-     * @param length largeur du joueur
-     */
     public Player(double x, double y) {
         this.x = x;
         this.y = y;
         listShootPlayer = new Shoot[3];
+        score = 0;
 
     }
 
     public double getX() {
         return x;
+    }
+
+    public void setX(double d) {
+        x = d;
+    }
+
+    public double getY() {
+        return y;
     }
 
     public double getProportion() {
@@ -50,8 +53,25 @@ public class Player {
         return listShootPlayer;
     }
 
+    public void setToZListShootPlayer() {
+        for (int i = 0; i < 3; i++) {
+            if (listShootPlayer[i] != null) {
+                listShootPlayer[i].destroy();
+                listShootPlayer[i] = null;
+            }
+        }
+    }
+
     public void setAlive(Boolean b) {
         alive = b;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void incScore(int i) {
+        score += i;
     }
 
     public boolean getALive() {
@@ -64,6 +84,18 @@ public class Player {
 
     public boolean getCanShoot() {
         return canShoot;
+    }
+
+    public int getNbLife() {
+        return nb_life;
+    }
+
+    public void decNbLife() {
+        nb_life -= 1;
+    }
+
+    public void setNbLife(int n) {
+        nb_life = n;
     }
 
     /**

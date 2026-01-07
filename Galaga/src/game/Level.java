@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
-import engine.StdDraw;
 import game.actors.Bee;
 import game.actors.Butterfly;
 import game.actors.Ennemy;
@@ -24,6 +23,7 @@ public class Level {
     private LinkedList<Shoot> lLEnnShoot;
     private ArrayList<Ennemy> formation;
     private ArrayList<Ennemy> ennCanShoot;
+    private ArrayList<Integer> ennemyMoving;
 
     public Level(String n, String sF, String cS, String cM) {
         name = n;
@@ -33,6 +33,7 @@ public class Level {
         formation = new ArrayList<Ennemy>(); // Formation des ennemies
         lLEnnShoot = new LinkedList<Shoot>(); // Linked List des tirs Ennemi
         ennCanShoot = new ArrayList<Ennemy>(); // Liste des ennemies qui peuvent tirer
+        ennemyMoving = new ArrayList<Integer>();
     }
 
     public String getName() {
@@ -41,6 +42,10 @@ public class Level {
 
     public Double getSpeedFormation() {
         return speedFormation;
+    }
+
+    public int getNombreRestantEnnemi() {
+        return nbBee + nbButterfly + nbMoth;
     }
 
     public int getCooldownAttaque() {
@@ -76,10 +81,11 @@ public class Level {
         }
     }
 
-    public void initShooter() {
-        for (int i = 32; i < 43; i++) {
+    public void initShooter() { // and attack
+        for (int i = 32; i <= 43; i++) {
             ennCanShoot.add(formation.get(i));
             formation.get(i).setCanAction(true);
+            ennemyMoving.add(i);
         }
 
     }
@@ -127,7 +133,7 @@ public class Level {
         return false;
     }
 
-    public void update(Shoot[] listShootPlayer) {
+    public boolean update(Shoot[] listShootPlayer, Player playerInst) {
 
         boolean changeDirBee = false;
         boolean changeDirMoth = false;
@@ -135,20 +141,100 @@ public class Level {
 
         // gestion déplacement ennemy
         for (Ennemy e : formation) {
-            if (e instanceof Bee) {
-                ((Bee) e).update();
-                if ((e.getX() < 0) || (e.getX() > 1 - e.getProportion() * 16)) {
-                    changeDirBee = true;
+
+            if (e.isAlive() == true) {
+                if (e instanceof Bee) {
+                    ((Bee) e).update();
+                    if ((e.getX() < 0) || (e.getX() > 1 - e.getProportion() * 16)) {
+                        changeDirBee = true;
+                    }
+                } else if (e instanceof Moth) {
+                    ((Moth) e).update();
+                    if ((e.getX() < 0) || (e.getX() > 1 - e.getProportion() * 16)) {
+                        changeDirMoth = true;
+                    }
+                } else if (e instanceof Butterfly) {
+                    ((Butterfly) e).update();
+                    if ((e.getX() < 0) || (e.getX() > 1 - e.getProportion() * 16)) {
+                        changeDirButterfly = true;
+                    }
                 }
-            } else if (e instanceof Moth) {
-                ((Moth) e).update();
-                if ((e.getX() < 0) || (e.getX() > 1 - e.getProportion() * 16)) {
-                    changeDirMoth = true;
-                }
-            } else if (e instanceof Butterfly) {
-                ((Butterfly) e).update();
-                if ((e.getX() < 0) || (e.getX() > 1 - e.getProportion() * 16)) {
-                    changeDirButterfly = true;
+
+                if (e.getIsAttaque() == true) { // if il est en train d'attaquer
+                    e.updateMoving();
+
+                    // Gestion ennemi going hors champs
+                    if (e.getY() < 0.1 + e.getProportion() * 13) {
+                        e.destroy();
+                        e.setIsAttaque(false);
+                        if (ennCanShoot.contains(e)) {
+                            ennCanShoot.remove(e);
+                            ennemyMoving.remove(ennemyMoving.indexOf(e.getIndice()));
+                            e.setCanAction(false);
+                            if (e instanceof Bee) {
+                                Ennemy et = formation.get(e.getIndice() - (24 / 2));
+                                if (et instanceof Bee) {
+                                    et.setCanAction(true);
+                                    ennCanShoot.add(et);
+                                    ennemyMoving.add(et.getIndice());
+                                }
+                                nbBee -= 1;
+
+                            } else if (e instanceof Butterfly) {
+                                if ((e.getIndice() - 16 / 2) > 0) {
+                                    Ennemy et = formation.get(e.getIndice() - 16 / 2);
+                                    if (et instanceof Butterfly) {
+                                        et.setCanAction(true);
+                                        ennCanShoot.add(et);
+                                        ennemyMoving.add(et.getIndice());
+                                    }
+                                }
+                                nbButterfly -= 1;
+                            } else {
+
+                                nbMoth -= 1;
+                            }
+                        }
+                    }
+
+                    // Gestion collision Ennemi Player
+                    if (e.isAlive() == true) {
+                        if ((e.getX() >= playerInst.getX() - e.getProportion() * 16)
+                                && (e.getX() <= playerInst.getX() + playerInst.getProportion() * 16)) {
+
+                            if ((e.getY() - e.getProportion() * 13 <= playerInst.getY())) {
+
+                                playerInst.setAlive(false);
+                                e.destroy();
+                                e.setIsAttaque(false);
+                                ennemyMoving.remove(ennemyMoving.indexOf(e.getIndice()));
+                                if (ennCanShoot.contains(e)) {
+                                    ennCanShoot.remove(e);
+                                    e.setCanAction(false);
+                                    if (e instanceof Bee) {
+                                        Ennemy et = formation.get(e.getIndice() - 24 / 2);
+                                        if (et instanceof Bee) {
+                                            et.setCanAction(true);
+                                            ennCanShoot.add(et);
+                                            ennemyMoving.add(et.getIndice());
+                                        }
+                                        nbBee -= 1;
+                                    } else if (e instanceof Butterfly) {
+                                        Ennemy et = formation.get(e.getIndice() - 16 / 2);
+                                        if (et instanceof Butterfly) {
+                                            et.setCanAction(true);
+                                            ennCanShoot.add(et);
+                                            ennemyMoving.add(et.getIndice());
+                                        }
+                                        nbButterfly -= 1;
+                                    } else {
+                                        nbMoth -= 1;
+                                    }
+                                }
+                                return true; // player has been touch
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -175,60 +261,7 @@ public class Level {
 
         }
 
-        // for (Ennemy e : formation) { // maybe change it not optimal rn
-        // if (e instanceof Bee) {
-        // if (changeDirBee == true) {
-        // ((Bee) e).changeDirection();
-        // changeDirBee = false;
-        // }
-        // } else if (e instanceof Moth) {
-        // if (changeDirMoth == true) {
-        // ((Moth) e).changeDirection();
-        // changeDirMoth = false;
-        // }
-        // } else if (e instanceof Butterfly) {
-        // if (changeDirButterfly == true) {
-        // ((Butterfly) e).changeDirection();
-        // changeDirButterfly = false;
-        // }
-        // }
-        // }
-
-        // System.out.println();
-        // for (int i = 0; i < formation.size(); i++) {
-        // if (formation.get(i) instanceof Bee) {
-        // if (i == 31 || i == 43) {
-        // System.out.println("Abeille : " + i + " x : " + formation.get(i).getX() + "
-        // direction "
-        // + ((Bee) formation.get(i)).getDirection() + "speed : " +
-        // formation.get(i).getSpeed());
-        // }
-
-        // ((Bee) formation.get(i)).update();
-
-        // if (i == 31 || i == 43) {
-        // System.out.println("Abeille : " + i + " x : " + formation.get(i).getX() + "
-        // direction "
-        // + ((Bee) formation.get(i)).getDirection() + "speed : " +
-        // formation.get(i).getSpeed());
-        // }
-        // } else if (formation.get(i) instanceof Moth) {
-        // ((Moth) formation.get(i)).update();
-        // } else if (formation.get(i) instanceof Butterfly) {
-        // ((Butterfly) formation.get(i)).update();
-        // }
-
-        // }
-
-        // for (int i = 0; i < 10; i++) {
-        // if (listEShoots[i] != null) {
-        // listEShoots[i].update();
-        // if (listEShoots[i].getY() - listEShoots[i].getProportion() * 6 < 0.1) {
-        // listEShoots[i] = null;
-        // }
-        // }
-        // }
-
+        // gestion tir player
         for (Shoot s : listShootPlayer) {
             if (s != null) {
                 for (Ennemy e : formation) {
@@ -239,20 +272,49 @@ public class Level {
                     Double posShootY = s.getY() + s.getProportion() * 12;
                     if (e.isAlive() == true) {
                         if ((posShootX >= e.getX()) && (posShootX <= e.getX() + e.getProportion() * 17)) {
-                            if (posShootY >= e.getY()) {
-                                if (e instanceof Bee) {
+                            if ((posShootY >= e.getY()) && (posShootY <= e.getY() + e.getProportion() * 12)) {
 
+                                playerInst.incScore(e.getScore());
+
+                                if (e instanceof Bee) {
                                     if (ennCanShoot.contains(e)) {
                                         ennCanShoot.remove(e);
+                                        ennemyMoving.remove(ennemyMoving.indexOf(e.getIndice()));
                                         e.setCanAction(false);
-                                        formation.get(e.getIndice() - nbBee / 2).setCanAction(true);
-                                        ennCanShoot.add(formation.get(e.getIndice() - nbBee / 2));
+                                        Ennemy et = formation.get(e.getIndice() - 24 / 2); // nbBee = 24
+                                        if (et instanceof Bee) {
+                                            et.setCanAction(true);
+                                            ennCanShoot.add(et);
+                                            ennemyMoving.add(et.getIndice());
+                                        }
+
                                     }
+                                    nbBee -= 1;
 
                                 } else if (e instanceof Butterfly) {
-                                    // nbButterfly -= 1;
+                                    if (ennCanShoot.contains(e)) {
+                                        ennCanShoot.remove(e);
+                                        ennemyMoving.remove(ennemyMoving.indexOf(e.getIndice()));
+                                        e.setCanAction(false);
+                                        if ((e.getIndice() - 16 / 2) > 0) {
+                                            Ennemy et = formation.get(e.getIndice() - 16 / 2); // nbButterfly = 16
+                                            if (et instanceof Butterfly) {
+                                                et.setCanAction(true);
+                                                ennCanShoot.add(et);
+                                                ennemyMoving.add(et.getIndice());
+                                            }
+                                        }
+
+                                    }
+                                    nbButterfly -= 1;
+
                                 } else if (e instanceof Moth) {
-                                    // nbMoth -= 1;
+                                    if (ennCanShoot.contains(e)) {
+                                        ennCanShoot.remove(e);
+                                        ennemyMoving.remove(ennemyMoving.indexOf(e.getIndice()));
+                                        e.setCanAction(false);
+                                    }
+                                    nbMoth -= 1;
                                 }
                                 e.destroy();
                                 s.destroy();
@@ -263,55 +325,119 @@ public class Level {
                 }
             }
         }
+        return false;
 
     }
 
     public void makeEnnemyShoot() {
         Random r = new Random();
-        int randomEnnemy = r.nextInt(0, ennCanShoot.size());
-        // if (posRE != 0) {
-        // lLEnnShoot.add(new Shoot(formation.get(posRE).getX() +
-        // formation.get(posRE).getProportion() * 8,
-        // formation.get(posRE).getY() - formation.get(posRE).getProportion() * 11,
-        // -1));
-
-        // }
-        if (ennCanShoot.get(randomEnnemy).getCanAction() == true) {
-            lLEnnShoot
-                    .add(new Shoot(
-                            ennCanShoot.get(randomEnnemy).getX() + ennCanShoot.get(randomEnnemy).getProportion() * 8,
-                            ennCanShoot.get(randomEnnemy).getY() - ennCanShoot.get(randomEnnemy).getProportion() * 11,
-                            -1));
+        if (ennCanShoot.size() < 4) {
+            if (nbBee < 4) { // ALL BEES ARE DEAD OMG WHAT
+                // we put first line of butterfly
+                for (int i = nbMoth + nbButterfly / 2; i <= nbMoth + nbButterfly; i++) {
+                    if (formation.get(i).isAlive() == true) {
+                        ennCanShoot.add(formation.get(i));
+                        formation.get(i).setCanAction(true);
+                        ennemyMoving.add(i);
+                    }
+                }
+            }
+            if (nbButterfly < 4) { // ALL THE BUTTERFLY ARE DEAD HELP US OMG
+                for (int i = 0; i <= nbMoth; i++) {
+                    if (formation.get(i).isAlive() == true) {
+                        ennCanShoot.add(formation.get(i));
+                        formation.get(i).setCanAction(true);
+                        ennemyMoving.add(i);
+                    }
+                }
+            }
         }
+        if (ennCanShoot.size() != 0) {
+            int randomEnnemy = r.nextInt(0, ennCanShoot.size());
 
-        // for (Shoot s : listEShoots) {
-        // if (s == null) {
-        // s = new Shoot(formation.get(posRE).getX() +
-        // formation.get(posRE).getProportion() * 16,
-        // formation.get(posRE).getY() - formation.get(posRE).getProportion() * 11, -1);
-        // break;
-        // }
-        // }
-
-        // for (int i = 0; i < 10; i++) {
-        // if (listEShoots[i] == null) {
-        // listEShoots[i] = new Shoot(formation.get(posRE).getX() +
-        // formation.get(posRE).getProportion() * 16,
-        // formation.get(posRE).getY() - formation.get(posRE).getProportion() * 11, -1);
-
-        // break;
-        // } else {
-        // i += 1;
-        // }
-        // }
-        // if (posRE != 0) {
-        // lLEnnShoot.add(new Shoot(formation.get(posRE).getX() +
-        // formation.get(posRE).getProportion() * 8,
-        // formation.get(posRE).getY() - formation.get(posRE).getProportion() * 11,
-        // -1));
-
-        // }
+            if (ennCanShoot.get(randomEnnemy).getCanAction() == true) {
+                if (ennCanShoot.get(randomEnnemy).isAlive() == true) { // shouldnt be doing that but idk why some ennemi
+                                                                       // arent dying
+                    lLEnnShoot
+                            .add(new Shoot(
+                                    ennCanShoot.get(randomEnnemy).getX()
+                                            + ennCanShoot.get(randomEnnemy).getProportion() * 8,
+                                    ennCanShoot.get(randomEnnemy).getY()
+                                            - ennCanShoot.get(randomEnnemy).getProportion() * 11,
+                                    -1));
+                }
+            }
+        }
 
     }
 
+    public void makeEnnemyAttack() {
+
+        if (ennemyMoving.size() != 0) {
+            Random r = new Random();
+            if (ennCanShoot.size() < 4) {
+                if (nbBee < 4) { // ALL BEES ARE DEAD OMG WHAT
+                    // we put first line of butterfly
+                    for (int i = nbMoth + nbButterfly / 2; i <= nbMoth + nbButterfly; i++) {
+                        if (formation.get(i).isAlive() == true) {
+                            ennCanShoot.add(formation.get(i));
+                            formation.get(i).setCanAction(true);
+                            ennemyMoving.add(i);
+                        }
+                    }
+                }
+                if (nbButterfly < 4) { // ALL THE BUTTERFLY ARE DEAD HELP US OMG
+                    for (int i = 0; i <= nbMoth; i++) {
+                        if (formation.get(i).isAlive() == true) {
+                            ennCanShoot.add(formation.get(i));
+                            formation.get(i).setCanAction(true);
+                            ennemyMoving.add(i);
+                        }
+                    }
+                }
+            }
+
+            if (ennemyMoving.size() != 0) {
+                int randomEnnemy = r.nextInt(0, ennemyMoving.size());
+                if (formation.get(ennemyMoving.get(randomEnnemy)).getCanAction() == true) { // idk ?
+                    formation.get(ennemyMoving.get(randomEnnemy)).setIsAttaque(true);
+                }
+            }
+
+        }
+    }
+
+    public void setBackEnnemi() {
+        for (int i : ennemyMoving) {
+            if (formation.get(i) instanceof Bee) {
+                if (i > 31) {
+                    if (formation.get(i).getY() != 0.57) {
+                        formation.get(i).setY(0.57);
+                    }
+                } else {
+                    if (formation.get(i).getY() != 0.64) {
+                        formation.get(i).setY(0.64);
+                    }
+                }
+
+            } else if (formation.get(i) instanceof Butterfly) {
+                if (i > 11) {
+                    if (formation.get(i).getY() != 0.71) {
+                        formation.get(i).setY(0.71);
+                    }
+                } else {
+                    if (formation.get(i).getY() != 0.78) {
+                        formation.get(i).setY(0.78);
+                    }
+                }
+            } else {
+                if (formation.get(i).getY() != 0.85) {
+                    formation.get(i).setY(0.85);
+                }
+            }
+            formation.get(i).draw();
+        }
+
+        lLEnnShoot.clear();
+    }
 }
