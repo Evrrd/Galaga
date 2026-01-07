@@ -33,26 +33,55 @@ public class Player {
 
     }
 
+    /**
+     * Return coordonné x
+     * 
+     * @return double
+     */
     public double getX() {
         return x;
     }
 
+    /**
+     * Set coordonné x
+     * 
+     * @param d
+     */
     public void setX(double d) {
         x = d;
     }
 
+    /**
+     * Return coordonné y
+     * 
+     * @return double
+     */
     public double getY() {
         return y;
     }
 
+    /**
+     * Return proportion player
+     * 
+     * @return double
+     */
     public double getProportion() {
         return proportionPlayer;
     }
 
+    /**
+     * Return le tableau des tirs du player
+     * 
+     * @return Shoot[]
+     */
     public Shoot[] getListShootPlayer() {
         return listShootPlayer;
     }
 
+    /**
+     * Mets à 0 la liste des tirs de player lorsque celui-ci se fait tirer ou gagne
+     * un niveau
+     */
     public void setToZListShootPlayer() {
         for (int i = 0; i < 3; i++) {
             if (listShootPlayer[i] != null) {
@@ -62,38 +91,81 @@ public class Player {
         }
     }
 
+    /**
+     * Set Alive
+     * 
+     * @param b
+     */
     public void setAlive(Boolean b) {
         alive = b;
     }
 
+    /**
+     * Return le score de player
+     * 
+     * @return int
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Increment le score du player avec la valeur i
+     * 
+     * @param i
+     */
     public void incScore(int i) {
         score += i;
     }
 
+    /**
+     * Return si le joueur est alive
+     * 
+     * @return boolean
+     */
     public boolean getALive() {
         return alive;
     }
 
+    /**
+     * Set CanShoot, set si le joueur peut tirer
+     * 
+     * @param b
+     */
     public void setCanShoot(boolean b) {
         canShoot = b;
     }
 
+    /**
+     * Return si le joueur peut tirer
+     * 
+     * @return boolean
+     */
     public boolean getCanShoot() {
         return canShoot;
     }
 
+    /**
+     * Return le nombre de vie du joueur
+     * 
+     * @return int
+     */
     public int getNbLife() {
         return nb_life;
     }
 
+    /**
+     * Décrémente le nombre de vie de joueur de 1
+     */
     public void decNbLife() {
         nb_life -= 1;
     }
 
+    /**
+     * Set le nombre de vie à n
+     * 
+     * @param n
+     */
     public void setNbLife(int n) {
         nb_life = n;
     }
@@ -158,6 +230,7 @@ public class Player {
 
     /**
      * Met à jour la position du joueur en fonction des touches préssé.
+     * Et gère les tirs du player
      */
     public void update() {
         double speed = 0.01; // vitesse de déplacement du joueur

@@ -17,9 +17,9 @@ public class Level {
     private Double speedFormation;
     private int cooldownAttaque;
     private int cooldownMissile;
-    private int nbBee = 0;
-    private int nbButterfly = 0;
-    private int nbMoth = 0;
+    private int nbBee;
+    private int nbButterfly;
+    private int nbMoth;
     private LinkedList<Shoot> lLEnnShoot;
     private ArrayList<Ennemy> formation;
     private ArrayList<Ennemy> ennCanShoot;
@@ -33,33 +33,71 @@ public class Level {
         formation = new ArrayList<Ennemy>(); // Formation des ennemies
         lLEnnShoot = new LinkedList<Shoot>(); // Linked List des tirs Ennemi
         ennCanShoot = new ArrayList<Ennemy>(); // Liste des ennemies qui peuvent tirer
-        ennemyMoving = new ArrayList<Integer>();
+        ennemyMoving = new ArrayList<Integer>(); // Indice des ennemies qui peuvent attaquer
+
     }
 
+    /**
+     * Return le nom du Niveau
+     * 
+     * @return String
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Return la speed de la formation
+     * 
+     * @return Double
+     */
     public Double getSpeedFormation() {
         return speedFormation;
     }
 
+    /**
+     * Return le nombre d'ennemi restant
+     * 
+     * @return int
+     */
     public int getNombreRestantEnnemi() {
         return nbBee + nbButterfly + nbMoth;
     }
 
+    /**
+     * Return le cooldown Attaque
+     * 
+     * @return int
+     */
     public int getCooldownAttaque() {
         return cooldownAttaque;
     }
 
+    /**
+     * Return le cooldown de tir de missile
+     * 
+     * @return int
+     */
     public int getCooldownMissile() {
         return cooldownMissile;
     }
 
+    /**
+     * Permet d'ajouter un ennemi dans la formation
+     * 
+     * @param e
+     */
     public void addEnnemy(Ennemy e) {
         formation.add(e);
     }
 
+    /**
+     * Permet de créer un ennemi puis appelle la fonction addEnnemy pour l'ajouter
+     * dans la formation
+     * 
+     * @param sArray
+     * @param indice
+     */
     public void makeAddEnnemy(String[] sArray, int indice) {
         if (sArray[0].compareTo("Bee") == 0) {
             Bee E = new Bee(sArray[0], Double.valueOf(sArray[1]), Double.valueOf(sArray[2]),
@@ -81,6 +119,12 @@ public class Level {
         }
     }
 
+    /**
+     * Utilise la position des abeilles de la dernière ligne afin d'initialiser
+     * celle qui peuvent tirer et attaquer
+     * 
+     * @param i++
+     */
     public void initShooter() { // and attack
         for (int i = 32; i <= 43; i++) {
             ennCanShoot.add(formation.get(i));
@@ -90,10 +134,18 @@ public class Level {
 
     }
 
+    /**
+     * Return la formation
+     * 
+     * @return ArrayList<Ennemy>
+     */
     public ArrayList<Ennemy> getFormation() {
         return formation;
     }
 
+    /**
+     * Permet de tirer tout les tirs ennemies
+     */
     public void drawEnnemyShoot() {
         // for (Shoot s : listEShoots) {
         // if (s != null) {
@@ -108,6 +160,14 @@ public class Level {
         }
     }
 
+    /**
+     * Permet d'update le shoot des ennemies et de verifier si il y a des collisions
+     * entre les tirs ennemis et le player
+     * Return un boolean mais je crois pas l'utiliser
+     * 
+     * @param playerInst
+     * @return boolean
+     */
     public boolean updateEnnemyShoot(Player playerInst) {
         for (Shoot s : lLEnnShoot) {
             s.update();
@@ -133,13 +193,24 @@ public class Level {
         return false;
     }
 
+    /**
+     * Update le déplacement des Ennemy et gère leur changement de direction si
+     * ceux-ci vont trop loin
+     * Ou alors si l'ennemi est en train d'attaquer, s'occupe de la collision
+     * S'occupe aussi d'update les tirs du joueur et de regarder si il n'y a pas de
+     * collisions entre ceux-ci et les Ennemy
+     * 
+     * @param listShootPlayer
+     * @param playerInst
+     * @return boolean
+     */
     public boolean update(Shoot[] listShootPlayer, Player playerInst) {
 
         boolean changeDirBee = false;
         boolean changeDirMoth = false;
         boolean changeDirButterfly = false;
 
-        // gestion déplacement ennemy
+        // gestion déplacement Ennemy
         for (Ennemy e : formation) {
 
             if (e.isAlive() == true) {
@@ -329,6 +400,11 @@ public class Level {
 
     }
 
+    /**
+     * Permet en premier lieu de choisir un ennemi de la ligne du bas au hasard pour
+     * le faire tirer. Mais aussi s'occupe de remplir l'ArrayList des Ennemy qui
+     * peuvent tirer lorsque celle-ci commencer a être vide.
+     */
     public void makeEnnemyShoot() {
         Random r = new Random();
         if (ennCanShoot.size() < 4) {
@@ -371,6 +447,9 @@ public class Level {
 
     }
 
+    /**
+     * Même chose que la fonction makeEnnemyShoot mais pour les attaques !
+     */
     public void makeEnnemyAttack() {
 
         if (ennemyMoving.size() != 0) {
@@ -407,6 +486,10 @@ public class Level {
         }
     }
 
+    /**
+     * Remets les ennemis qui était en mouvement à leur place lorsque le joueur se
+     * fait toucher par un missile
+     */
     public void setBackEnnemi() {
         for (int i : ennemyMoving) {
             if (formation.get(i) instanceof Bee) {

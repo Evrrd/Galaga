@@ -34,55 +34,120 @@ public class Ennemy {
         indiceFormation = iF;
     }
 
+    /**
+     * Return si l'ennemy est en vie
+     * 
+     * @return boolean
+     */
     public boolean isAlive() {
         return alive;
     }
 
+    /**
+     * Return coordonné x
+     * 
+     * @return double
+     */
     public double getX() {
         return x;
     }
 
+    /**
+     * Return coordonné y
+     * 
+     * @return double
+     */
     public double getY() {
         return y;
     }
 
+    /**
+     * Set coordonné y
+     * 
+     * @param d
+     */
     public void setY(double d) {
         y = d;
     }
 
+    /**
+     * Set si l'ennemy est en vie ou pas
+     * 
+     * @param b
+     */
     public void setAlive(boolean b) {
         alive = b;
     }
 
+    /**
+     * Return proportion
+     * 
+     * @return double
+     */
     public double getProportion() {
         return proportion;
     }
 
+    /**
+     * Return speed
+     * 
+     * @return double
+     */
     public double getSpeed() {
         return speed;
     }
 
+    /**
+     * Return score que l'ennemy donne lorsqu'il est tué
+     * 
+     * @return int
+     */
     public int getScore() {
 
         return valeurScore;
     }
 
+    /**
+     * Return si l'ennemy peut faire une action
+     * 
+     * @return boolean
+     */
     public boolean getCanAction() {
         return canAction;
     }
 
+    /**
+     * Set si l'ennemy peut faire une action
+     * 
+     * @param b
+     */
     public void setCanAction(boolean b) {
         canAction = b;
     }
 
+    /**
+     * Return son indice dans la formation
+     * 
+     * @return int
+     */
     public int getIndice() {
         return indiceFormation;
     }
 
+    /**
+     * Set si il est en train d'attaquer
+     * 
+     * @param b
+     */
     public void setIsAttaque(boolean b) {
         isAttaque = b;
     }
 
+    /**
+     * Return si il est en train d'attaquer
+     * 
+     * @return boolean
+     */
     public boolean getIsAttaque() {
         return isAttaque;
     }
@@ -158,11 +223,17 @@ public class Ennemy {
 
     // private abstract void move();
 
+    /**
+     * Permet de détruire un ennemy
+     */
     public void destroy() {
         canAction = false;
         alive = false;
     }
 
+    /**
+     * Update lorsque l'ennemy attaque
+     */
     public void updateMoving() {
         y -= speed;
     }

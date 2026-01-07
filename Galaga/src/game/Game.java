@@ -19,14 +19,14 @@ import game.actors.Player;
 public class Game {
     public Player player; // Jouer, seul éléments actuellement dans notre jeu
 
-    public Level levelInst;
-    private int nbLevel = 1;
-    private int timeMissile = 0;
-    private int timeAttaque = 0;
-    private int bestScore;
+    public Level levelInst; // Instance du level
+    private int nbLevel; // Nombre du niveau actuel
+    private int timeMissile; // timer prochain missile
+    private int timeAttaque; // timer prochaine attaque
+    private int bestScore; // meilleur score
 
-    private double[] tabpluieX;
-    private double[] tabpluieY;
+    private double[] tabpluieX; // Coordonée x de la pluie arrière plan
+    private double[] tabpluieY; // Coordonée y de la pluie arrière plan
 
     /**
      * Créé un jeu avec tous les éléments qui le composent
@@ -34,6 +34,9 @@ public class Game {
     public Game() {
         player = new Player(0.472, 0.2);
         bestScore = takeBestScore();
+        nbLevel = 1;
+        timeMissile = 0;
+        timeAttaque = 0;
         tabpluieX = new double[100];
         tabpluieY = new double[100];
 
@@ -47,6 +50,14 @@ public class Game {
 
     }
 
+    /**
+     * Parse String, sers pas à grand chose juste utiliser split aurait aussi autant
+     * servi
+     * mais pourquoi pas
+     * 
+     * @param s
+     * @return String[]
+     */
     public String[] parseStrings(String s) {
         if (s == null) {
             return null;
@@ -54,6 +65,11 @@ public class Game {
         return s.split(" ");
     }
 
+    /**
+     * Prends le meilleur score dans le fichier Highscore et le renvoie
+     * 
+     * @return int
+     */
     public int takeBestScore() {
         Path cheminBS = Paths.get("ressources/highscore/highscore.sc");
         try (BufferedReader reader = Files.newBufferedReader(cheminBS)) {
@@ -65,6 +81,12 @@ public class Game {
         return 0;
     }
 
+    /**
+     * Va chercher la formation du level dans le fichier level
+     * et crée envoie les données à la classe Level
+     * 
+     * @param a
+     */
     public void Level(int a) {
 
         String s = "level" + a + ".lvl";
@@ -108,6 +130,7 @@ public class Game {
 
             update(); // on met a jour les attributs de chaque éléments
             draw(); // on dessine chaques éléments
+
             if ((player.getALive() == false)) {
                 lose();
 
@@ -147,6 +170,13 @@ public class Game {
         }
     }
 
+    /**
+     * Toute les actions nécessaire quand le joueur se fait toucher, en gros
+     * remettre tout à sa place et
+     * enlever les tirs qui trainent sur le terrain
+     * 
+     * @return boolean
+     */
     public boolean lose() {
         player.setToZListShootPlayer();
         levelInst.setBackEnnemi();
@@ -156,6 +186,9 @@ public class Game {
         return false;
     }
 
+    /**
+     * Écran lorsque le joueur à perdu (n'a plus de vie)
+     */
     public void loseScreen() {
 
         while (!StdDraw.isKeyPressed(32)) {
@@ -178,13 +211,13 @@ public class Game {
             StdDraw.filledRectangle(0.5, 0.5, 0.235, 0.235);
 
             StdDraw.setPenColor(StdDraw.YELLOW);
-            StdDraw.text(0.46, 0.6, "Ton score est de : ");
+            StdDraw.text(0.46, 0.6, "Your score  : ");
             StdDraw.setPenColor(StdDraw.WHITE);
             StdDraw.text(0.6, 0.6, player.getScore() + " !");
 
             if (player.getScore() > bestScore) {
                 StdDraw.setPenColor(StdDraw.BLUE);
-                StdDraw.text(0.5, 0.5, "WOW !! Nouveau meilleur score :D");
+                StdDraw.text(0.5, 0.5, "WOW !! New HighScore :D");
                 try {
                     FileWriter writer = new FileWriter("ressources/highscore/highscore.sc");
                     writer.write(player.getScore() + "");
@@ -194,18 +227,18 @@ public class Game {
                 }
             } else if (player.getScore() > bestScore / 2) {
                 StdDraw.setPenColor(StdDraw.GREEN);
-                StdDraw.text(0.5, 0.5, "Pas si mal :)");
+                StdDraw.text(0.5, 0.5, "Cool :)");
             } else {
                 StdDraw.setPenColor(StdDraw.RED);
-                StdDraw.text(0.5, 0.5, "Tu peux faire mieux..... :l");
+                StdDraw.text(0.5, 0.5, "Could be better but okay.. :l");
             }
 
             StdDraw.setPenColor(StdDraw.YELLOW);
-            StdDraw.text(0.45, 0.4, "Appuie sur ");
+            StdDraw.text(0.45, 0.4, "Push ");
             StdDraw.setPenColor(StdDraw.WHITE);
             StdDraw.text(0.56, 0.4, " ESPACE ");
             StdDraw.setPenColor(StdDraw.YELLOW);
-            StdDraw.text(0.5, 0.37, " pour relancer une partie");
+            StdDraw.text(0.5, 0.37, " to start another game");
 
             StdDraw.show();
             StdDraw.pause(30);
@@ -222,6 +255,9 @@ public class Game {
 
     }
 
+    /**
+     * Toutes les actions nécessaire lorsque le player a gagné
+     */
     public void win() {
         drawWin(nbLevel);
         StdDraw.show();
@@ -236,6 +272,9 @@ public class Game {
         StdDraw.pause(1000);
     }
 
+    /**
+     * Écran de la victoire
+     */
     public void BigWinScreen() {
         while (!StdDraw.isKeyPressed(32)) {
 
@@ -259,13 +298,13 @@ public class Game {
             StdDraw.setPenColor(StdDraw.WHITE);
             StdDraw.text(0.5, 0.65, "Bravo ! Incroyable !");
             StdDraw.setPenColor(StdDraw.YELLOW);
-            StdDraw.text(0.46, 0.6, "Ton score est de : ");
+            StdDraw.text(0.46, 0.6, "!! Your score  : ");
             StdDraw.setPenColor(StdDraw.WHITE);
             StdDraw.text(0.6, 0.6, player.getScore() + " !");
 
             if (player.getScore() > bestScore) {
                 StdDraw.setPenColor(StdDraw.BLUE);
-                StdDraw.text(0.5, 0.5, "WOW !! Nouveau meilleur score :D");
+                StdDraw.text(0.5, 0.5, "WOW !! New highscore :D");
                 try {
                     FileWriter writer = new FileWriter("ressources/highscore/highscore.sc");
                     writer.write(player.getScore() + "");
@@ -275,18 +314,18 @@ public class Game {
                 }
             } else if (player.getScore() > bestScore / 2) {
                 StdDraw.setPenColor(StdDraw.GREEN);
-                StdDraw.text(0.5, 0.5, "Pas si mal :)");
+                StdDraw.text(0.5, 0.5, "Cool ! :)");
             } else {
                 StdDraw.setPenColor(StdDraw.RED);
-                StdDraw.text(0.5, 0.5, "Tu peux faire mieux..... :l");
+                StdDraw.text(0.5, 0.5, "Could've done better. :l");
             }
 
             StdDraw.setPenColor(StdDraw.YELLOW);
-            StdDraw.text(0.45, 0.4, "Appuie sur ");
+            StdDraw.text(0.45, 0.4, "Push ");
             StdDraw.setPenColor(StdDraw.WHITE);
             StdDraw.text(0.56, 0.4, " ESPACE ");
             StdDraw.setPenColor(StdDraw.YELLOW);
-            StdDraw.text(0.5, 0.37, " pour relancer une partie");
+            StdDraw.text(0.5, 0.37, " to start again");
 
             StdDraw.show();
             StdDraw.pause(30);
@@ -332,6 +371,9 @@ public class Game {
 
     }
 
+    /**
+     * Dessin de la zone du score
+     */
     public void drawZoneScore() {
         StdDraw.setPenColor(StdDraw.PINK);
         StdDraw.line(0, 0.9, 1, 0.9);
@@ -355,6 +397,9 @@ public class Game {
         StdDraw.text(0.5, 0.93, highScore + "");
     }
 
+    /**
+     * Dessin de la zone du bas, de la vie du joueur et des niveaux
+     */
     public void drawZoneLifeLevel() {
         StdDraw.setPenColor(StdDraw.CYAN);
         StdDraw.line(0, 0.1, 1, 0.1);
@@ -402,6 +447,9 @@ public class Game {
         }
     }
 
+    /**
+     * Dessin des étoiles en arrière plan
+     */
     public void drawStars() {
         StdDraw.setPenColor(StdDraw.YELLOW);
 
@@ -414,12 +462,20 @@ public class Game {
         }
     }
 
+    /**
+     * Dessin des ennemies
+     */
     public void drawEnnemy() {
         for (Ennemy e : levelInst.getFormation()) {
             e.draw();
         }
     }
 
+    /**
+     * Dessin lorsque le joueur se fait toucher
+     * 
+     * @param i
+     */
     public void drawLoseOnce(int i) {
         StdDraw.setPenColor(StdDraw.CYAN);
         StdDraw.filledRectangle(0.5, 0.5, 0.28, 0.18);
@@ -436,21 +492,26 @@ public class Game {
 
     }
 
+    /**
+     * Dessin lorsque le joueur gagne un niveau
+     * 
+     * @param i
+     */
     public void drawWin(int i) {
         StdDraw.setPenColor(StdDraw.BOOK_LIGHT_BLUE);
         StdDraw.filledRectangle(0.5, 0.5, 0.28, 0.18);
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.filledRectangle(0.5, 0.5, 0.275, 0.175);
         StdDraw.setPenColor(StdDraw.YELLOW);
-        StdDraw.text(0.5, 0.6, "WOW ?! Tu viens de réussir le niveau ");
+        StdDraw.text(0.5, 0.6, "WOW ?! You just beat a level omg ! ");
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.text(0.72, 0.6, i + "");
         StdDraw.setPenColor(StdDraw.YELLOW);
-        StdDraw.text(0.5, 0.5, "Avec un score de : ");
+        StdDraw.text(0.5, 0.5, "With a score of : ");
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.text(0.65, 0.5, player.getScore() + " !");
         StdDraw.setPenColor(StdDraw.BLUE);
-        StdDraw.text(0.5, 0.4, "Le niveau " + i + 1 + " va commencer ! ");
+        StdDraw.text(0.5, 0.4, "Level " + (i + 1) + " will start ! ");
 
     }
 
