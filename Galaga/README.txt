@@ -1,10 +1,10 @@
-Le Thuy Phuong Tu  1
-Dangreau Evrard  2
+Tu  1
+Evrard  2
 
 Explication des fonctionnalitées réalisée :
 
 Les sprites de toutes les entitées sont présents. Il est possible de se déplacer de gauche 
-à droite et de tirer avec espace.
+à droite avec les flèches du clavier et de tirer avec espace.
 Toutes les collisions sont actives, ainsi le joueur ou les ennemies peuvent mourir
 sous le coup d'un missile de l'autre camp.
 Si le joueur se retrouve dans cette situation, un écran va lui inqiquer dans combien de temps
@@ -24,7 +24,7 @@ Les Moth ne capturent pas le vaisseau.
 Il n'y a pas de Boss, à la place des niveaux plus rapide et difficile.
 
 Guide d'exécution du projet :
-Il suffit de compiler App.java normalement.
+Il suffit de compiler App.java depuis la racine du projet.
 
 Description de l'interface pour jouer avec votre projet :
 Le score et le HighScore sont en haut tandis que les vies du joueur sont en bas.
